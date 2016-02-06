@@ -23,6 +23,7 @@ That's why, as not official support is not provided yet, I decided to do somethi
 ( Read *BEFORE-INSTALLATION.txt* for further information)
 
 2) Double click *install.bat*
+
 3) Follow the instructions
 
 **Ubuntu & Ubuntu Variants (Linux Mint, Lubuntu, Xubuntu, Kubuntu etc.)**
@@ -38,7 +39,9 @@ bash install.sh
 **Arch Linux**
 
 1) Open terminal
+
 2) Navigate to the folder where you have openra-bleed-tibsunra2.install, tibsun_ra2.patch & PKGBUILD
+
 3) Run the following commands:
 
 ```
@@ -55,6 +58,7 @@ sudo pacman -U openra-bleed-tibsunra2-r*.tar.xz
 ```
 
 5) Once the game is installed, please follow the instructions about how to install Red Alert 2 mix files, given in the end of the installation process.
+
 6) Play the game by typing 'openra' in terminal or using a desktop file.
 
 **Post-installation instructions**
@@ -86,8 +90,19 @@ Since the game has been compiled from source and no additional setup programs ar
 
 **Ubuntu/Linux Mint**
 
-If you want to remove OpenRA, just run 'sudo apt-get purge --remove openra-bleed-tibsunra2' (without quotations) in your terminal window.
+If you want to remove OpenRA, just run
+
+```
+sudo apt-get purge --remove openra-bleed-tibsunra2'
+```
+
+in your terminal window.
 
 **Arch Linux**
 
-Run 'sudo pacman -Rs openra-bleed-tibsunra2' (without quotations) in your terminal window. 
+Run
+```
+sudo pacman -Rs openra-bleed-tibsunra2 
+```
+
+in your terminal window. 

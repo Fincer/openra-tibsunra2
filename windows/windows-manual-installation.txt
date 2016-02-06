@@ -1,0 +1,96 @@
+**************************************************************************
+OpenRA + Tiberian Sun & Red Alert 2 installation instructions for Windows
+**************************************************************************
+------------------------------------------------
+1) Extract contents of OpenRA-windows.zip
+
+------------------------------------------------
+2) Download OpenRA source code & Red Alert 2 mod files from Github:
+
+https://github.com/OpenRA/OpenRA/archive/bleed.zip
+https://github.com/OpenRA/ra2/archive/master.zip
+
+------------------------------------------------
+3) Extract both Github zip archives to a separate location. (E.G. create 'OpenRA-bleed' and 'ra2-master' parent folders)
+
+------------------------------------------------
+4) Go to 'ra2-master' folder. Cut OpenRA.Mods.RA2 directory and put it into OpenRA-bleed parent folder.
+
+------------------------------------------------
+5) Cut ra2-master folder into OpenRA-bleed\mods\ and rename it simply "ra2" (ra2-master ->> ra2)
+
+------------------------------------------------
+7) Download and install Microsoft .NET Framework 4.5.2. If you already have it, skip this step.
+
+https://www.microsoft.com/en-us/download/confirmation.aspx?id=42643
+
+All .NET 4.X Framework versions:
+
+https://msdn.microsoft.com/en-us/library/5a4x27ek%28v=vs.110%29.aspx
+
+------------------------------------------------
+8) You must patch OpenRA source files in order to run Tiberian Sun and Red Alert 2. Open patch.exe in Command Prompt.
+
+In Command Prompt, navigate to the folder where you have patch.exe
+
+(For example C:\Users\Fincer\Desktop\OpenRA-windows\)
+
+Patch is a linux-based program we need to patch critical OpenRA source files. 
+
+------------------------------------------------
+9) In Command Prompt, navigate to the folder where you have patch.exe.
+
+(For example C:\Users\Fincer\Desktop\OpenRA-windows\)
+
+------------------------------------------------
+10) Run
+
+patch.exe -d OpenRA-bleed -Np1 -i ..\patches\openra-srcpatch.patch
+
+where
+
+OpenRA-bleed = OpenRA-bleed parent folder
+..\patches\openra-srcpatch.patch = openra-srcpatch.patch file location
+
+------------------------------------------------
+11) Once the files have been patched, navigate to OpenRA-bleed folder in Command Prompt
+
+cd OpenRA-bleed
+
+------------------------------------------------
+12) In Command Prompt, run
+
+make.cmd
+
+------------------------------------------------
+13) Type 'dependencies' at the prompt (without quotations). Select "Run once (R)"
+
+------------------------------------------------
+14) run make.cmd again. Now, instead of typing 'dependencies', type 'all' (without quotations, once again).
+
+------------------------------------------------
+15) Once the script has run, there should be many warnings but not a single error message.
+
+I got 52 errors if I had only .NET Framework 4.5 installed. 
+
+After I installed Microsoft Windows SDK for Windows 7 and .NET Framework 4 (https://www.microsoft.com/en-us/download/details.aspx?id=8279)
+I got only 13 warnings.
+
+However, the number of those warning messages didn't affect my gameplay in any way.
+That's why I'm not sure if you need to worry about those messages. 
+And I can't really recommend to install 1.7GB of unneeded stuff on your PC
+without a very good and valid reason.
+
+If you feel it important or your game crashes etc., please consider installing that SDK stuff and re-building the game.
+
+------------------------------------------------
+16) OpenRA exe files have been compiled now. You can run the game by double-clicking OpenRA.exe in your Openra-Bleed parent folder.
+
+------------------------------------------------
+17) To play Red Alert 2, insert theme.mix, language.mix, ra2.mix and multi.mix into \My Documents\OpenRA\Contents\ra2\ folder.
+
+You can find these mix files inside of a Red Alert 2 original installation media (CD).
+
+theme.mix, multi.mix = RA2 CD root folder
+
+ra2.mix, language.mix = RA2 CD Root/INSTALL/Game1.CAB (inside that archive file)

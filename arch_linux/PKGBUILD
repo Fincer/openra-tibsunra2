@@ -1,0 +1,67 @@
+# Maintainer: Fincer <fincer89 at hotmail dot com>
+
+pkgname=openra-bleed-tibsunra2
+pkgver=r19983.ddea517
+pkgrel=1
+pkgdesc="An open-source implementation of the Red Alert engine using .NET/mono and OpenGL (git version)"
+arch=("any")
+url="http://openra.net"
+license=("GPL3")
+depends=("mono" "ttf-dejavu" "openal" "libgl" "freetype2" "sdl2" "lua51" "hicolor-icon-theme" "desktop-file-utils" "xdg-utils")
+makedepends=("git" "nuget")
+provides=("openra" "openra-dedicated-bleed")
+conflicts=("openra-bleed" "openra" "openra-dedicated-bleed" "openra-playtest")
+install=openra-bleed-tibsunra2.install
+source=("$pkgname-src::git+https://github.com/OpenRA/OpenRA.git#branch=bleed"
+"git://github.com/OpenRA/ra2.git"
+ra2-csproj.patch
+makefile-mcs.patch
+tibsun_ra2.patch)
+sha1sums=('SKIP'
+          'SKIP'
+          '70a45c14874e4454bacb45b5d0c917d452cf4e84'
+          'ae7f0a7e0dd9617e8ea95f22d3fd8188067c6da2'
+          'e2ad63fa53f992a55f620c1c67d51e4b2593a921')
+
+pkgver() {
+    cd "$srcdir/$pkgname-src"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    cd "$srcdir/$pkgname-src"
+    patch -Np1 -i "$srcdir/makefile-mcs.patch"
+}
+    
+build() {
+
+# Move Red Alert 2 Github files to the right place:
+    cd "$srcdir/ra2"
+    mv ./OpenRA.Mods.RA2 "$srcdir/$pkgname-src/"
+    mkdir -p "$srcdir/$pkgname-src/mods/ra2/"
+    mv ./* "$srcdir/$pkgname-src/mods/ra2/"
+
+# Patch OpenRA core files for Tiberian Sun & Red Alert 2
+    cd "$srcdir/$pkgname-src"
+    patch -Np1 -i "$srcdir/tibsun_ra2.patch"
+    patch -Np1 -i "$srcdir/ra2-csproj.patch"
+
+    mkdir $srcdir/$pkgname-src/mods/ra2/bits/{vehicles,themes}
+    
+    cd "$srcdir/$pkgname-src"
+    make version
+    make dependencies
+    make all [DEBUG=true]
+}
+
+package() {
+    cd "$srcdir/$pkgname-src"
+    make prefix=/usr DESTDIR="$pkgdir" install-all
+    make prefix=/usr DESTDIR="$pkgdir" install-linux-shortcuts
+
+    echo -e  "\n***OpenRA compilation script completed.\nPlease see further instructions below.***"
+    sleep 2
+    echo -e "Install OpenRA by typing 'sudo pacman -U openra-bleed-tibsunra2-r*.tar.xz' in this terminal window\n"
+    sleep 4
+    echo -e "***TIBERIAN SUN & RED ALERT 2 - HOWTO***\n\nTO PLAY TIBERIAN SUN: Launch the game and download the required asset files from the web when the game asks you to do so.\n\nTO PLAY RED ALERT 2: You must install language.mix, multi.mix, ra2.mix and theme.mix into '$HOME/.openra/Content/ra2/' folder. You find these files from original RA2 installation media (CD's):\n\n-theme.mix, multi.mix = RA2 CD Root folder\n-ra2.mix, language.mix = RA2 CD Root/INSTALL/Game1.CAB (inside that archive file)\n\n***LAUNCHING OPENRA***\n\nTo launch OpenRA, simply type 'openra' (without quotations) in your terminal or use a desktop shortcut file.\n\n***UNINSTALLATION***\n\nIf you want to remove OpenRA, just type 'sudo apt-get purge --remove $PACKAGE_NAME'\n\nYou can find deb package of $PACKAGE_NAME at '$HOME' for further usage.\n\n***MULTIPLAYER***\n\nIt's recommended to use exactly same deb installation package for multiplayer usage to minimize possible version differences/conflicts between players. If your friends compiles this package with another operating system, please make sure they use exactly same source files for their OpenRA compilation process.\n\nHave fun!\n"
+}

@@ -82,6 +82,86 @@ while ($true)
 	move-item ".\data\ra2-master" ".\data\OpenRA-bleed\mods\ra2"
 
 #------------------------------------------------------
+## Get OpenRA Git version number
+
+	"`nRetrieving OpenRA & Red Alert 2 Git version numbers."
+
+	$web = New-Object System.Net.WebClient
+	$web.DownloadFile("https://github.com/OpenRA/OpenRA",".\data\openra-github.html")
+
+	$flag=0
+	Get-Content .\data\openra-github.html |
+	foreach {
+	Switch -Wildcard ($_){
+	"*Latest commit*" {$flag=1}
+	"*time datetime*" {$flag=0}
+	}
+	if ($flag -eq 1){
+	Out-File .\data\openra-html-stripped.txt -InputObject $_ -Append
+	}
+	}
+
+	(Get-Content .\data\openra-html-stripped.txt)[2] -replace '\s','' | Foreach-Object{ 'git-' + $_ } > .\data\openra-latestcommit.txt
+
+	$openra_gitversion = [IO.File]::ReadAllText(".\data\openra-latestcommit.txt").trim("`r`n")
+
+#------------------------------------------------------
+## Get Red Alert 2 Git version number
+
+	$web = New-Object System.Net.WebClient
+	$web.DownloadFile("https://github.com/OpenRA/ra2",".\data\ra2-github.html")
+
+	$flag=0
+	Get-Content .\data\ra2-github.html |
+	foreach {
+	Switch -Wildcard ($_){
+	"*Latest commit*" {$flag=1}
+	"*time datetime*" {$flag=0}
+	}
+	if ($flag -eq 1){
+	Out-File .\data\ra2-html-stripped.txt -InputObject $_ -Append
+	}
+	}
+
+	(Get-Content .\data\ra2-html-stripped.txt)[2] -replace '\s','' | Foreach-Object{ 'git-' + $_ } > .\data\ra2-latestcommit.txt
+
+	$ra2_gitversion = [IO.File]::ReadAllText(".\data\ra2-latestcommit.txt").trim("`r`n")
+
+#------------------------------------------------------
+## Push version numbers to mod files
+
+# Red Alert
+	(Get-Content .\data\Openra-bleed\mods\ra\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\Openra-bleed\mods\ra\mod.yaml
+
+# Tiberian Dawn
+	(Get-Content .\data\Openra-bleed\mods\cnc\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\Openra-bleed\mods\cnc\mod.yaml
+
+# Dune 2K
+	(Get-Content .\data\Openra-bleed\mods\d2k\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\Openra-bleed\mods\d2k\mod.yaml
+
+# Tiberian Sun
+	(Get-Content .\data\Openra-bleed\mods\ts\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\Openra-bleed\mods\ts\mod.yaml
+
+# Red Alert 2
+	(Get-Content .\data\Openra-bleed\mods\ra2\mod.yaml) -replace '{DEV_VERSION}',$ra2_gitversion | Set-Content .\data\Openra-bleed\mods\ra2\mod.yaml
+
+# Mod Chooser
+	(Get-Content .\data\Openra-bleed\mods\modchooser\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\Openra-bleed\mods\modchooser\mod.yaml
+
+# All
+	(Get-Content .\data\Openra-bleed\mods\all\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\Openra-bleed\mods\all\mod.yaml
+
+#------------------------------------------------------
+## Remove temporary files
+
+	Remove-Item .\data\openra-github.html
+	Remove-Item .\data\openra-html-stripped.txt
+	Remove-Item .\data\ra2-github.html
+	Remove-Item .\data\ra2-html-stripped.txt
+	Remove-Item .\data\openra-latestcommit.txt
+	Remove-Item .\data\ra2-latestcommit.txt
+
+#------------------------------------------------------
 ## Prepare OpenRA source code for Tiberian Sun & Red Alert 2
 
 	Start-Sleep -s 3

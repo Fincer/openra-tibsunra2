@@ -7,7 +7,7 @@ The following operating systems are currently supported:
 
 - Windows 7
 - Ubuntu (14.04 LTS, 14.10, 15.04 LTS, 15.10 & 16.04 LTS)
-- Linux Mint
+- Linux Mint (17.3, 17.2 & 17.1)
 - Arch Linux
 
 A lot of people are willing to play Tiberian Sun and Red Alert 2 mods in OpenRA, no matter if they're at unfinished state or not. Personally, I feel the official OpenRA wiki may be really hard to understand for novice people who just want to play these titles and show little interest in cryptic compilation processes.
@@ -93,7 +93,7 @@ Since the game has been compiled from source and no additional setup programs ar
 If you want to remove OpenRA, just run
 
 ```
-sudo apt-get purge --remove openra-bleed-tibsunra2'
+sudo apt-get purge --remove openra-bleed-tibsunra2
 ```
 
 in your terminal window.

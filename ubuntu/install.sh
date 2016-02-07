@@ -88,7 +88,7 @@ set -e
 
 echo -e "\n$bold_in***Welcome Comrade*** $out\n" 
 echo -e "This script compiles and installs OpenRA from source with Tiberian Sun & Red Alert 2.\n
-- The script is NOT made by official developers of OpenRA and may contain bugs.
+- The script is NOT made by the developers of OpenRA and may contain bugs.
 - The script works only on Ubuntu, Linux Mint and similar Linux distributions. It creates a deb installation package using OpenRA source code and additional Red Alert 2 mod files from Github.\n\nNOTE: As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable some day. Please, feel free to modify it if necessary."
 echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nUbuntu 16.04 LTS$green_in\tOK$out\nUbuntu 15.10$green_in\t\tOK$out\nUbuntu 15.04 LTS$green_in\tOK$out\nUbuntu 14.10$green_in\t\tOK$out\nUbuntu 14.04 LTS$green_in\tOK$out\nLinux Mint 17.3$green_in\t\tOK$out\nLinux Mint 17.2$green_in\t\tOK$out\nLinux Mint 17.1$green_in\t\tOK$out\nLinux Mint 16$red_in\t\tFailure$out$dim_in (can't find required packages)$out\n"
 
@@ -98,8 +98,8 @@ read -r -p "Do you want to continue? [y/N] " response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	sleep 1
 
-	echo -e "\nAllright, let's continue. Do you want $bold_in\n\n1.$out manually check which OpenRA build dependencies (packages) will be installed on your system? $dim_in(manual apt-get + deb packages installation)$bold_in\n2.$out automatically accept the installation of the OpenRA build dependencies during the script execution? $dim_in(apt-get with -y option + automatic .deb packages installation)$out\n"
-	read -r -p "Please type 1 or 2: " number
+	echo -e "\nAllright, let's continue. Do you want $bold_in\n\n1.$out manually check which OpenRA build dependencies (packages) will be installed on your system and manually install OpenRA after compilation? $dim_in(manual apt-get + deb packages installation)$bold_in\n2.$out automatically accept the installation of the OpenRA build dependencies during the script execution and automatically install OpenRA after compilation? $dim_in(apt-get with -y option + automatic .deb packages installation)$out\n"
+	read -r -p "Please type 1 or 2 (Default: 2): " number
 	sleep 1	
 	if [[ $number -eq 1 ]]; then
 		METHOD=''
@@ -257,6 +257,11 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	patch -d $HOME/openra-master/$PACKAGE -Np1 -i $HOME/openra-master/tibsun_ra2.patch
 	patch -d $HOME/openra-master/$PACKAGE -Np1 -i $HOME/openra-master/ra2-csproj.patch
 
+# Get version number for Red Alert 2 mod (Github)
+RA2_VERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
+
+	sed -i "s/Version: {DEV_VERSION}/Version: $RA2_VERSION/g" $HOME/openra-master/$PACKAGE/mods/ra2/mod.yaml
+
 #*********************************************************************************************************
 ## PART 4/7
 #
@@ -303,7 +308,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 				if [[ $response4 =~ ^([yY][eE][sS]|[yY])$ ]]; then
 					sudo dpkg -i $HOME/$PACKAGE_NAME*.deb
 				else
-					echo -e "\nPlease install '$PACKAGE_NAME' manually. You find the compiled package at '$HOME'."
+					echo -e "\nPlease install '$PACKAGE_NAME' manually. You find the compiled package in '$HOME'."
 					sleep 2
 		 		fi
 		else

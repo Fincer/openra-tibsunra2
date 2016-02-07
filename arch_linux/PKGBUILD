@@ -1,7 +1,7 @@
 # Maintainer: Fincer <fincer89 at hotmail dot com>
 
 pkgname=openra-bleed-tibsunra2
-pkgver=r19983.ddea517
+pkgver=r20025.1df728a
 pkgrel=1
 pkgdesc="An open-source implementation of the Red Alert engine using .NET/mono and OpenGL (git version)"
 arch=("any")
@@ -47,6 +47,10 @@ build() {
     patch -Np1 -i "$srcdir/ra2-csproj.patch"
 
     mkdir $srcdir/$pkgname-src/mods/ra2/bits/{vehicles,themes}
+
+# Get Red Alert 2 GIT version number
+    ra2_version=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
+    sed -i "s/Version: {DEV_VERSION}/Version: $ra2_version/g" $srcdir/$pkgname-src/mods/ra2/mod.yaml
     
     cd "$srcdir/$pkgname-src"
     make version
@@ -63,5 +67,5 @@ package() {
     sleep 2
     echo -e "Install OpenRA by typing 'sudo pacman -U openra-bleed-tibsunra2-r*.tar.xz' in this terminal window\n"
     sleep 4
-    echo -e "***TIBERIAN SUN & RED ALERT 2 - HOWTO***\n\nTO PLAY TIBERIAN SUN: Launch the game and download the required asset files from the web when the game asks you to do so.\n\nTO PLAY RED ALERT 2: You must install language.mix, multi.mix, ra2.mix and theme.mix into '$HOME/.openra/Content/ra2/' folder. You find these files from original RA2 installation media (CD's):\n\n-theme.mix, multi.mix = RA2 CD Root folder\n-ra2.mix, language.mix = RA2 CD Root/INSTALL/Game1.CAB (inside that archive file)\n\n***LAUNCHING OPENRA***\n\nTo launch OpenRA, simply type 'openra' (without quotations) in your terminal or use a desktop shortcut file.\n\n***UNINSTALLATION***\n\nIf you want to remove OpenRA, just type 'sudo apt-get purge --remove $PACKAGE_NAME'\n\nYou can find deb package of $PACKAGE_NAME at '$HOME' for further usage.\n\n***MULTIPLAYER***\n\nIt's recommended to use exactly same deb installation package for multiplayer usage to minimize possible version differences/conflicts between players. If your friends compiles this package with another operating system, please make sure they use exactly same source files for their OpenRA compilation process.\n\nHave fun!\n"
+    echo -e "***TIBERIAN SUN & RED ALERT 2 - HOWTO***\n\nTO PLAY TIBERIAN SUN: Launch the game and download the required asset files from the web when the game asks you to do so.\n\nTO PLAY RED ALERT 2: You must install language.mix, multi.mix, ra2.mix and theme.mix into '$HOME/.openra/Content/ra2/' folder. You find these files from original RA2 installation media (CD's):\n\n-theme.mix, multi.mix = RA2 CD Root folder\n-ra2.mix, language.mix = RA2 CD Root/INSTALL/Game1.CAB (inside that archive file)\n\n***LAUNCHING OPENRA***\n\nTo launch OpenRA, simply type 'openra' (without quotations) in your terminal or use a desktop shortcut file.\n\n***UNINSTALLATION***\n\nIf you want to remove OpenRA, just type 'sudo pacman -Rs $pkgname'\n\n***MULTIPLAYER***\n\nIt's recommended to use exactly same compiled OpenRA version for multiplayer usage to minimize possible version differences/conflicts between players. If your friends compiles this package with another operating system, please make sure they use exactly same source files for their OpenRA compilation process.\n\nHave fun!\n"
 }

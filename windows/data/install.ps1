@@ -128,6 +128,15 @@ while ($true)
 	$ra2_gitversion = [IO.File]::ReadAllText(".\data\ra2-latestcommit.txt").trim("`r`n")
 
 #------------------------------------------------------
+## Prepare OpenRA source code for Tiberian Sun & Red Alert 2
+
+	Start-Sleep -s 3
+	"`nPatching OpenRA source code for Tiberian Sun & Red Alert 2."
+	cd .\data
+	.\patch.exe -d OpenRA-bleed -Np1 -i ..\openra-srcpatch.patch
+	cd ..
+
+#------------------------------------------------------
 ## Push version numbers to mod files
 
 # Red Alert
@@ -160,15 +169,6 @@ while ($true)
 	Remove-Item .\data\ra2-html-stripped.txt
 	Remove-Item .\data\openra-latestcommit.txt
 	Remove-Item .\data\ra2-latestcommit.txt
-
-#------------------------------------------------------
-## Prepare OpenRA source code for Tiberian Sun & Red Alert 2
-
-	Start-Sleep -s 3
-	"`nPatching OpenRA source code for Tiberian Sun & Red Alert 2."
-	cd .\data
-	.\patch.exe -d OpenRA-bleed -Np1 -i ..\openra-srcpatch.patch
-	cd ..
 
 #------------------------------------------------------
 ## Compile OpenRA with Tiberian Sun & Red Alert 2

@@ -1,1 +1,1 @@
-start cmd.exe /k @powershell -NoProfile -ExecutionPolicy Unrestricted -File .\windows\install.ps1 %*
+start cmd.exe /k @powershell -NoProfile -ExecutionPolicy Unrestricted -File .\data\windows\install.ps1 %*

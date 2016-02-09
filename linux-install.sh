@@ -41,6 +41,7 @@ FEDORA="Fedora"
 #Post-installation instructions
 
 bold_in='\e[1m'
+dim_in='\e[2m'
 out='\e[0m'
 PACKAGEMANAGER_INSTALL=1
 PACKAGEMANAGER_REMOVE=1
@@ -62,36 +63,56 @@ echo -e "$bold_in\n***TIBERIAN SUN & RED ALERT 2 - HOWTO***$out\n\nTO PLAY TIBER
 # If we're running Arch Linux, then execute this
 if [[ $DISTRO =~ "$ARCH" ]]; then
 
-	echo -e "\nYou are about to install OpenRA with Tiberian Sun & Red Alert 2.\n"
+	echo -e "\n$bold_in***Welcome Comrade*** $out\n" 
+	echo -e "You are about to install OpenRA with Tiberian Sun & Red Alert 2 on Arch Linux.\n"
 	read -r -p "Do you want to continue? [y/N] " response
 		if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  	  echo -e "\nStarting OpenRA compilation process.\n"
-		sleep 2
-		cp ./data/patches/*.patch ./data/linux/arch_linux/
-		cd ./data/linux/arch_linux
-		updpkgsums
-		makepkg -c
-		mv *.tar.xz $HOME 
+		
+			echo -e "\nAllright, let's continue. Do you want $bold_in\n\n1.$out manually install OpenRA after its compilation? $dim_in(manual pacman installation)$bold_in\n2.$out automatically install OpenRA after its compilation? $dim_in(pacman -U <compiled_openra_package>)$out\n"
+	
+			read -r -p "Please type 1 or 2 (Default: 2): " number
+			sleep 1
+			if [[ $number -eq 1 ]]; then
+				METHOD_ARCH=''
+				echo -e "\nSelected installation method:$bold_in Manual$out"
+			else
+				echo -e "\nSelected installation method:$bold_in Automatic$out"
+			fi
+		
+			echo -e "$bold_in\n***Starting OpenRA compilation process.***$out\n"
+			sleep 2
+			rm $WORKING_DIR/data/linux/arch_linux/*.patch
+			cp ./data/patches/*.patch ./data/linux/arch_linux/
+			cd ./data/linux/arch_linux
+			rm -rf */
+			updpkgsums
+			makepkg -c
+			mv *.tar.xz $HOME 
 
-		PACKAGEMANAGER_INSTALL='sudo pacman -U'
-		PACKAGEMANAGER_REMOVE='sudo pacman -Rs'
-		INSTALL_NAME=$(sed -n '/pkgname/{p;q;}' ./data/linux/arch_linux/PKGBUILD | sed -n 's/^pkgname=//p')
-		PACKAGE_NAME=$(find $HOME -maxdepth 1 -type f -iname "$INSTALL_NAME*.tar.xz" | sed -e 's/.*\///')
-    
-		rm -r */
-		rm ./*.patch
-		cd $WORKING_DIR
+			PACKAGEMANAGER_INSTALL='sudo pacman -U'
+			PACKAGEMANAGER_REMOVE='sudo pacman -Rs'
+			INSTALL_NAME=$(sed -n '/pkgname/{p;q;}' ./PKGBUILD | sed -n 's/^pkgname=//p')
+			PACKAGE_NAME=$(find $HOME -maxdepth 1 -type f -iname "$INSTALL_NAME*.tar.xz" | sed -e 's/.*\///')
 
-		if [[ $PACKAGE_NAME =~ '^[0-9]+$' ]]; then 
+			if [[ ! $number -eq 1 ]]; then
+				echo -e "$bold_in\n***Installing OpenRA (root password required).***$out\n"
+				METHOD_ARCH=$($PACKAGEMANAGER_INSTALL --noconfirm $HOME/$PACKAGE_NAME)
+				echo -e "$bold_in\n***OpenRA installation completed.***$out"
+			fi
+			rm -rf */
+			rm ./*.patch
+			cd $WORKING_DIR
+
+			if [[ $PACKAGE_NAME =~ '^[0-9]+$' ]]; then 
+				exit 1
+			else
+				endtext
+ 			   	exit 1
+			fi
+
+		else
+			echo -e "\nCancelling OpenRA installation.\n"
 			exit 1
-		else
-			endtext
- 		   	exit 1
-		fi
-
-		else
- 		   echo -e "\nCancelling OpenRA installation.\n"
- 	 	  exit 1
 		fi
 fi
 

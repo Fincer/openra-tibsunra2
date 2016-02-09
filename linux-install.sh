@@ -73,7 +73,6 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			read -r -p "Please type 1 or 2 (Default: 2): " number
 			sleep 1
 			if [[ $number -eq 1 ]]; then
-				METHOD_ARCH=''
 				echo -e "\nSelected installation method:$bold_in Manual$out"
 			else
 				echo -e "\nSelected installation method:$bold_in Automatic$out"
@@ -96,7 +95,7 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 
 			if [[ ! $number -eq 1 ]]; then
 				echo -e "$bold_in\n***Installing OpenRA (root password required).***$out\n"
-				METHOD_ARCH=$($PACKAGEMANAGER_INSTALL --noconfirm $HOME/$PACKAGE_NAME)
+				$PACKAGEMANAGER_INSTALL --noconfirm $HOME/$PACKAGE_NAME
 				echo -e "$bold_in\n***OpenRA installation completed.***$out"
 			fi
 			rm -rf */

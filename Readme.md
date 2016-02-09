@@ -53,6 +53,7 @@ Launch the game and download the required asset files from the web when the game
 You must install language.mix, multi.mix, ra2.mix and theme.mix into 
 
 \My Documents\OpenRA\Content\ra2\ (Windows)
+
 .openra/Content/ra2/ (linux) 
 
 You find these files from original RA2 installation media (CD's):
@@ -71,9 +72,9 @@ For uninstallation, please see specific instructions for your Operating System b
 
 **Windows**
 
-Since the game has been compiled from source and no additional setup programs are provided, all you need to do is to delete the contents of 'OpenRA-bleed-tibsunra2' folder and \My Documents\OpenRA\.
+Since the game has been compiled from source and no additional setup programs are provided, all you need to do is to delete the contents of 'OpenRA-tibsunra2-Windows' folder and \My Documents\OpenRA\.
 
-**Ubuntu/Linux Mint**
+**Ubuntu/Linux Mint/Debian**
 
 If you want to remove OpenRA, just run
 
@@ -83,12 +84,22 @@ sudo apt-get purge --remove openra-bleed-tibsunra2
 
 in your terminal window.
 
-**OpenSUSE/Fedora**
+**OpenSUSE**
 
 Run
 
 ```
 sudo zypper remove openra-bleed-tibsunra2 
+```
+
+in your terminal window.
+
+**Fedora**
+
+Run
+
+```
+sudo dnf remove openra-bleed-tibsunra2 
 ```
 
 in your terminal window.

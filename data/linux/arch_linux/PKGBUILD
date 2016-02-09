@@ -1,0 +1,61 @@
+# Maintainer: Fincer <fincer89 at hotmail dot com>
+
+pkgname=openra-bleed-tibsunra2
+pkgver=r20041.e0d7445
+pkgrel=1
+pkgdesc="An open-source implementation of the Red Alert engine using .NET/mono and OpenGL (git version)"
+arch=("any")
+url="http://openra.net"
+license=("GPL3")
+depends=("mono" "ttf-dejavu" "openal" "libgl" "freetype2" "sdl2" "lua51" "hicolor-icon-theme" "desktop-file-utils" "xdg-utils")
+makedepends=("git" "nuget")
+provides=("openra" "openra-dedicated-bleed")
+conflicts=("openra-bleed" "openra" "openra-dedicated-bleed" "openra-playtest")
+install=openra-bleed-tibsunra2.install
+source=("$pkgname-src::git+https://github.com/OpenRA/OpenRA.git#branch=bleed"
+"git://github.com/OpenRA/ra2.git"
+ra2-csproj.patch
+openra-solution.patch
+tibsun_ra2.patch)
+sha1sums=('SKIP'
+          'SKIP'
+          '70a45c14874e4454bacb45b5d0c917d452cf4e84'
+          'c1d7581ce21851648489adf9ba28aa46ef9615d0'
+          'd0d8f602851a5712dec0fb8c489990f4c54b1782')
+
+pkgver() {
+    cd "$srcdir/$pkgname-src"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+    
+build() {
+
+# Move Red Alert 2 Github files to the right place:
+    cd "$srcdir/ra2"
+    mv ./OpenRA.Mods.RA2 "$srcdir/$pkgname-src/"
+    mkdir -p "$srcdir/$pkgname-src/mods/ra2/"
+    mv ./* "$srcdir/$pkgname-src/mods/ra2/"
+
+# Patch OpenRA core files for Tiberian Sun & Red Alert 2
+    cd "$srcdir/$pkgname-src"
+    patch -Np1 -i "$srcdir/ra2-csproj.patch"
+    patch -Np1 --binary -i "$srcdir/openra-solution.patch"
+    patch -Np1 -i "$srcdir/tibsun_ra2.patch"
+
+    mkdir $srcdir/$pkgname-src/mods/ra2/bits/{vehicles,themes}
+
+# Get Red Alert 2 GIT version number
+    ra2_version=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
+    sed -i "s/Version: {DEV_VERSION}/Version: $ra2_version/g" $srcdir/$pkgname-src/mods/ra2/mod.yaml
+    
+    cd "$srcdir/$pkgname-src"
+    make version
+    make dependencies
+    make all [DEBUG=true]
+}
+
+package() {
+    cd "$srcdir/$pkgname-src"
+    make prefix=/usr DESTDIR="$pkgdir" install-all
+    make prefix=/usr DESTDIR="$pkgdir" install-linux-shortcuts
+}

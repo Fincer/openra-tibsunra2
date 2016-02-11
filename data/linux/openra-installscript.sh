@@ -213,7 +213,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 					sleep 5
 					echo -e "\nUpdating package lists with APT.\n"
 					sleep 2
-					sudo apt-get update && \
+					sudo apt-get update || true
 					sudo apt-get $METHOD install mono-devel
 				fi
 
@@ -269,14 +269,14 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
 		echo -e "Updating package lists with APT.\n"
 		sleep 2
-		sudo apt-get update
+		sudo apt-get update || true
 	fi
 	echo -e "Installing required OpenRA build dependencies.\n"
 	sleep 4
 	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
 		sudo apt-get $METHOD install git dpkg-dev dh-make mono-devel libfreetype6-dev libopenal-data libopenal1 libsdl2-2.0-0 nuget curl liblua5.1-0-dev zenity xdg-utils build-essential gcc make libfile-fcntllock-perl
 		mozroots --import --sync && \
-		sudo apt-key update
+		sudo apt-key update || exit 1
 	elif [[ $DISTRO =~ $OPENSUSE ]]; then
 		if [[ ! $RELEASE = "openSUSE Leap 42.1" ]] || [[ ! $RELEASE = "openSUSE Tumbleweed" ]]; then
 			sudo zypper $METHOD install rpm-build git mono-devel libfreetype6 libopenal1 libSDL2-2_0-0 curl lua51 liblua5_1 zenity xdg-utils gcc make

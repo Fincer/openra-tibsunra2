@@ -1,7 +1,7 @@
 # Maintainer: Fincer <fincer89 at hotmail dot com>
 
 pkgname=openra-bleed-tibsunra2
-pkgver=r20041.e0d7445
+pkgver=r20052.b8942d4
 pkgrel=1
 pkgdesc="An open-source implementation of the Red Alert engine using .NET/mono and OpenGL (git version)"
 arch=("any")
@@ -9,8 +9,8 @@ url="http://openra.net"
 license=("GPL3")
 depends=("mono" "ttf-dejavu" "openal" "libgl" "freetype2" "sdl2" "lua51" "hicolor-icon-theme" "desktop-file-utils" "xdg-utils")
 makedepends=("git" "nuget")
-provides=("openra" "openra-dedicated-bleed")
-conflicts=("openra-bleed" "openra" "openra-dedicated-bleed" "openra-playtest")
+provides=("openra")
+conflicts=("openra-git" "openra")
 install=openra-bleed-tibsunra2.install
 source=("$pkgname-src::git+https://github.com/OpenRA/OpenRA.git#branch=bleed"
 "git://github.com/OpenRA/ra2.git"
@@ -21,7 +21,7 @@ sha1sums=('SKIP'
           'SKIP'
           '70a45c14874e4454bacb45b5d0c917d452cf4e84'
           'c1d7581ce21851648489adf9ba28aa46ef9615d0'
-          'd0d8f602851a5712dec0fb8c489990f4c54b1782')
+          'f347f7866352eda1965bb9c5d66fb054eacfffa6')
 
 pkgver() {
     cd "$srcdir/$pkgname-src"

@@ -48,11 +48,15 @@ PACKAGEMANAGER_REMOVE=1
 PACKAGE_NAME=1
 INSTALL_NAME=1
 
+function endtext_fail() {
+echo -e "\nWhoops! Something went wrong. Please check for possible error messages above.\n"
+}
+
 function endtext() {
 OPENRA_GITVERSION=git-$(git ls-remote https://github.com/OpenRA/OpenRA.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 RA2_GITVERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 
-echo -e  "\n***OpenRA compilation script completed.\nPlease see further instructions below.***"
+echo -e  "$bold_in\n***OpenRA compilation script completed.\nPlease see further instructions below.***$out"
 sleep 2
 echo -e "$bold_in\n***MANUAL INSTALLATION***$out\n\nInstall OpenRA by typing '$PACKAGEMANAGER_INSTALL $HOME/$PACKAGE_NAME' (without quotations) in a terminal window."
 sleep 4
@@ -86,7 +90,13 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			rm -rf */
 			updpkgsums
 			makepkg -c
-			mv *.tar.xz $HOME 
+			
+			if [[ -f $WORKING_DIR/data/linux/arch_linux/*.tar.xz ]]; then
+				mv *.tar.xz $HOME
+			else
+				endtext_fail
+				exit 1
+			fi
 
 			PACKAGEMANAGER_INSTALL='sudo pacman -U'
 			PACKAGEMANAGER_REMOVE='sudo pacman -Rs'
@@ -102,10 +112,11 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			rm ./*.patch
 			cd $WORKING_DIR
 
-			if [[ $PACKAGE_NAME =~ '^[0-9]+$' ]]; then 
+			if [[ -z $PACKAGE_NAME ]]; then 
+				endtext_fail
 				exit 1
 			else
-				endtext
+				endtext_ok
  			   	exit 1
 			fi
 
@@ -133,11 +144,21 @@ if [[ $DISTRO =~ "$UBUNTU" ]] || [[ $DISTRO =~ "$DEBIAN" ]]; then
 	INSTALL_NAME=$(sed -n '/PACKAGE_NAME/{p;q;}' ./data/linux/openra-installscript.sh | sed -n 's/^PACKAGE_NAME=//p')
 	PACKAGE_NAME=$(find $HOME -maxdepth 1 -type f -iname "$INSTALL_NAME*.deb" | sed -e 's/.*\///')
   
-	if [[ $PACKAGE_NAME =~ '^[0-9]+$' ]]; then 
+
+	if [[ -z $PACKAGE_NAME ]]; then 
+		endtext_fail
+		if [[ -d $HOME/openra-master ]]; then
+			echo -e "\n"
+			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response2
+			if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+				echo -e "\nDeleting.\n"
+				rm -Rf $HOME/openra-master
+			fi
+		fi
 		exit 1
 	else
-		endtext
-    	exit 1
+		endtext_ok
+		exit 1
 	fi
 
 	exit 1
@@ -159,11 +180,20 @@ if [[ $DISTRO =~ "$FEDORA" ]] || [[ $DISTRO =~ "$OPENSUSE" ]]; then
 	INSTALL_NAME=$(sed -n '/PACKAGE_NAME/{p;q;}' ./data/linux/openra-installscript.sh | sed -n 's/^PACKAGE_NAME=//p')
 	PACKAGE_NAME=$(find $HOME -maxdepth 1 -type f -iname "$INSTALL_NAME*.rpm" | sed -e 's/.*\///')
   
-	if [[ $PACKAGE_NAME =~ '^[0-9]+$' ]]; then
+	if [[ -z $PACKAGE_NAME ]]; then 
+		endtext_fail
+		if [[ -d $HOME/openra-master ]]; then
+			echo -e "\n"
+			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response2
+			if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+				echo -e "\nDeleting.\n"
+				rm -Rf $HOME/openra-master
+			fi
+		fi
 		exit 1
 	else
-		endtext
-    	exit 1
+		endtext_ok
+		exit 1
 	fi
 
 	exit 1

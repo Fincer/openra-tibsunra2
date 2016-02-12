@@ -49,7 +49,7 @@ PACKAGE_NAME=1
 INSTALL_NAME=1
 
 function endtext_fail() {
-echo -e "\nWhoops! Something went wrong. Please check for possible error messages above.\n"
+echo -e "\nWhoops! Something went wrong. Please check possible error messages above.\n"
 }
 
 function endtext() {

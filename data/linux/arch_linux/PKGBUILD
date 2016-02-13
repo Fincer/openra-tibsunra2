@@ -1,27 +1,23 @@
 # Maintainer: Fincer <fincer89 at hotmail dot com>
 
 pkgname=openra-bleed-tibsunra2
-pkgver=r20052.b8942d4
+pkgver=r20059.613854d
 pkgrel=1
 pkgdesc="An open-source implementation of the Red Alert engine using .NET/mono and OpenGL (git version)"
 arch=("any")
 url="http://openra.net"
 license=("GPL3")
 depends=("mono" "ttf-dejavu" "openal" "libgl" "freetype2" "sdl2" "lua51" "hicolor-icon-theme" "desktop-file-utils" "xdg-utils")
-makedepends=("git" "nuget")
+makedepends=("git")
 provides=("openra")
 conflicts=("openra-git" "openra")
 install=openra-bleed-tibsunra2.install
 source=("$pkgname-src::git+https://github.com/OpenRA/OpenRA.git#branch=bleed"
 "git://github.com/OpenRA/ra2.git"
-ra2-csproj.patch
-openra-solution.patch
-tibsun_ra2.patch)
 sha1sums=('SKIP'
           'SKIP'
-          '70a45c14874e4454bacb45b5d0c917d452cf4e84'
-          'c1d7581ce21851648489adf9ba28aa46ef9615d0'
-          'f347f7866352eda1965bb9c5d66fb054eacfffa6')
+          '2e67a7f84d78d7b9ce8981ebb578c7b744406406'
+          'ed794d2538ab53c747b10ab3a013f667eb455815')
 
 pkgver() {
     cd "$srcdir/$pkgname-src"
@@ -38,9 +34,7 @@ build() {
 
 # Patch OpenRA core files for Tiberian Sun & Red Alert 2
     cd "$srcdir/$pkgname-src"
-    patch -Np1 -i "$srcdir/ra2-csproj.patch"
-    patch -Np1 --binary -i "$srcdir/openra-solution.patch"
-    patch -Np1 -i "$srcdir/tibsun_ra2.patch"
+    for i in $srcdir/*.patch; do patch -Np1 < $i; done
 
     mkdir $srcdir/$pkgname-src/mods/ra2/bits/{vehicles,themes}
 
@@ -51,7 +45,7 @@ build() {
     cd "$srcdir/$pkgname-src"
     make version
     make dependencies
-    make all [DEBUG=true]
+    make all [DEBUG=false]
 }
 
 package() {

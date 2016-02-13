@@ -33,6 +33,11 @@ while ($true)
 	Remove-Item .\data\windows\OpenRA-bleed.zip -Force -ErrorAction SilentlyContinue
 	Remove-Item .\data\windows\ra2-master.zip -Force -ErrorAction SilentlyContinue
 
+	Remove-Item .\data\windows\*.html -Force -ErrorAction SilentlyContinue
+	Remove-Item .\data\windows\*.txt -Force -ErrorAction SilentlyContinue
+	Remove-Item .\data\windows\*.zip -Force -ErrorAction SilentlyContinue
+	Remove-Item .\data\windows\*.patch -Force -ErrorAction SilentlyContinue
+
 #------------------------------------------------------
 ## Prepare Github environment for downloading the source
 
@@ -130,7 +135,7 @@ while ($true)
 #------------------------------------------------------
 ## Prepare OpenRA source code for Tiberian Sun & Red Alert 2
 
-	Copy-Item ".\data\patches\*.patch" ".\data\windows"
+	Copy-Item ".\data\patches\windows\*.patch" ".\data\windows"
 
 	Start-Sleep -s 3
 	"`nPatching OpenRA source code for Tiberian Sun & Red Alert 2."
@@ -143,7 +148,7 @@ while ($true)
 
 	Write-Output "`nExecuting patch.exe $patchcount times now."
 
-	Get-ChildItem .\ -include *.patch -recurse | Foreach ($_) {.\patch.exe -d OpenRA-bleed -Np1 --binary -i $_.fullname }
+	Get-ChildItem .\ -include *.patch -recurse | Foreach ($_) {.\patch.exe -d OpenRA-bleed -Np1 -i $_.fullname }
 
 	cd ..
 	cd ..

@@ -138,7 +138,7 @@ elif [[ $DISTRO =~ $DEBIAN ]]; then
 elif [[ $DISTRO =~ $OPENSUSE ]]; then
 	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nOpenSUSE Tumbleweed $green_in\tOK$out\nOpenSUSE Leap 42.1 $green_in\tOK$out\nOpenSUSE 13.2 $green_in\t\tOK$out\nOpenSUSE 13.1 $red_in\t\tFailure$out$dim_in (can't find required packages)$out\n"
 elif [[ $DISTRO =~ $FEDORA ]]; then
-	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nFedora 23 $green_in\t\tOK$out\nFedora 22 $green_in\t\tOK$out\nOpenSUSE 13.1 $red_in\t\tFailure$out$dim_in (can't find required packages)$out\n"
+	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nFedora 23 $green_in\t\tOK$out\nFedora 22 $green_in\t\tOK$out\n"
 fi
 
 echo -e "You are using $RELEASE.\n"
@@ -168,7 +168,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	fi
 
 	if [ $SUDO_CHECK -eq 0 ]; then
-		if [ -z $METHOD ]; then
+		if [[ -z $METHOD ]]; then
 			echo -e "\nOpenRA compilation requires that you install some packages first. Your permission for installation is asked (yes/no) everytime it's needed. This script asks for a required root password now, so you don't have to type it multiple times later on while the script is running.\n\nPlease type sudo/root password now.\n" 
 		else
 			echo -e "\nOpenRA compilation requires that you install some packages first. This script asks for a required root password now, so you don't have to type it multiple times later on while the script is running.\n\nPlease type sudo/root password now.\n"
@@ -177,89 +177,6 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		sleep 1
 	else
 		true
-	fi
-
-## Check if the user is running Ubuntu 14.04 LTS/14.10 or Linux Mint and whether required nuget packages are installed if these Linux versions are being used.
-	if [[ $DISTRO =~ $UBUNTU ]]; then
-		if [  $RELEASE_VERSION == 1404 ] || [ $RELEASE_VERSION == 1410 ] || [ $RELEASE_MINT -eq 1 ] ; then
-			echo -e "\nYou are running Ubuntu 14.04 LTS/14.10 or Linux Mint. We need to check if you have required NuGet packages installed.\nThese packages are not (longer available) from the official repository but they are provided by this package.\n"
-			read -r -p "Press ENTER to proceed." enter
-			if [ ${#enter} -eq 0 ]; then
-				echo -e "$line_in\nChecking NuGet packages$out"
-			fi
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------
-## Check existence of 'nuget', 'libnuget-core-lib' & 'mono-devel' packages on Ubuntu 14.04 LTS/14.10/Linux Mint based system. 
-
-				if [ $PKG2_CHECK -eq 1 ]; then
-					echo -e "$green_in\nOK$out - 'mono-devel' found."
-				else
-					echo -e "$red_in\nWARNING$out - 'mono-devel' not found."
-				fi
-
-				if [ $PKG1_CHECK -eq 1 ]; then
-					echo -e "$green_in\nOK$out - 'libnuget-core-cil' found."
-				else
-					echo -e "$red_in\nWARNING$out - 'libnuget-core-cil' not found."
-				fi
-
-				if [ $PKG3_CHECK -eq 1 ]; then
-					echo -e "$green_in\nOK$out - 'nuget' found."
-				else
-					echo -e "$red_in\nWARNING$out - 'nuget' not found."
-				fi
-
-				if [ ! $PKG2_CHECK -eq 1 ]; then
-					echo -e "$red_in\nWARNING$out - NuGet requires 'mono-devel' package which was not found.\n\nInstalling 'mono-devel' now."
-					sleep 5
-					echo -e "\nUpdating package lists with APT.\n"
-					sleep 2
-					sudo apt-get update || true
-					sudo apt-get $METHOD install mono-devel
-				fi
-
-				if [ ! $PKG1_CHECK -eq 1 ]; then
-					if [ $number = 1 ]; then
-						echo
-						read -r -p "Install 'libnuget-core-cil' now? [y/N] " response2
-							if [[ $response2 =~ ^([yY][eE][sS]|[yY])$ ]]; then
-								sudo dpkg -i ./data/linux/ubuntu/libnuget-core-cil_2.8.5+md59+dhx1-1~getdeb1_all.deb
-							else
-								echo -e "\nOpenRA installation can't continue. Aborting.\n"
-								exit 1
-							fi
-					else
-						sudo dpkg -i ./data/linux/ubuntu/libnuget-core-cil_2.8.5+md59+dhx1-1~getdeb1_all.deb
-					fi
-				fi
-
-				PKG1_RECHECK=$(dpkg-query -W -f='${Status}' libnuget-core-cil 2>/dev/null | grep -c "ok installed")
-
-				if [ ! $PKG3_CHECK -eq 1 ]; then
-					if [ $number = 1 ]; then
-						echo
-						read -r -p "Install 'nuget' now? [y/N] " response3
-							if [[ $response3 =~ ^([yY][eE][sS]|[yY])$ ]]; then
-								sudo dpkg -i ./data/linux/ubuntu/nuget_2.8.5+md59+dhx1-1~getdeb1_all.deb
-							else
-								echo -e "\nOpenRA installation can't continue. Aborting.\n"
-								exit 1
-							fi
-					else
-						sudo dpkg -i ./data/linux/ubuntu/nuget_2.8.5+md59+dhx1-1~getdeb1_all.deb
-					fi
-				fi
-
-				PKG3_RECHECK=$(dpkg-query -W -f='${Status}' nuget 2>/dev/null | grep -c "ok installed")
-
-				if [ $PKG1_RECHECK -eq 1 ] && [ $PKG3_RECHECK -eq 1 ]; then
-					echo -e "$green_in\nOK$out - All required NuGet packages are installed."
-				else
-					echo -e "$red_in\nWARNING$out - Can't find all required NuGet packages. Aborting.\n"
-					exit 1
-				fi
-		else
-			true
-		fi
 	fi
 	sleep 2
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -274,31 +191,25 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	echo -e "Installing required OpenRA build dependencies.\n"
 	sleep 4
 	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
-		sudo apt-get $METHOD install git dpkg-dev dh-make mono-devel libfreetype6-dev libopenal-data libopenal1 libsdl2-2.0-0 nuget curl liblua5.1-0-dev zenity xdg-utils build-essential gcc make libfile-fcntllock-perl
+		sudo apt-get $METHOD install git dpkg-dev dh-make mono-devel libfreetype6 libopenal1 libsdl2-2.0-0 curl liblua5.1-0 zenity xdg-utils build-essential gcc make libfile-fcntllock-perl
 		mozroots --import --sync && \
 		sudo apt-key update || exit 1
 	elif [[ $DISTRO =~ $OPENSUSE ]]; then
 		if [[ ! $RELEASE = "openSUSE Leap 42.1" ]] || [[ ! $RELEASE = "openSUSE Tumbleweed" ]]; then
 			sudo zypper $METHOD install rpm-build git mono-devel libfreetype6 libopenal1 libSDL2-2_0-0 curl lua51 liblua5_1 zenity xdg-utils gcc make
-			sudo zypper $METHOD install ./data/linux/opensuse/mono-nuget-2.8.5-4.2.noarch.rpm
 		else
-			sudo zypper $METHOD install rpm-build git mono-devel libfreetype6 libopenal1 libSDL2-2_0-0 mono-nuget curl lua51 liblua5_1 zenity xdg-utils gcc make
+			sudo zypper $METHOD install rpm-build git mono-devel libfreetype6 libopenal1 libSDL2-2_0-0 curl lua51 liblua5_1 zenity xdg-utils gcc make
 		fi
 		mozroots --import --sync
 	elif [[ $DISTRO =~ $FEDORA ]]; then
-		sudo dnf $METHOD install rpm-build git mono-devel freetype-devel openal-soft SDL2 libgdiplus-devel libcurl compat-lua zenity xdg-utils gcc make
+		sudo dnf $METHOD install rpm-build git mono-devel freetype openal-soft SDL2 libgdiplus-devel libcurl compat-lua zenity xdg-utils gcc make
 		cd /etc/yum.repos.d/
 		if [[ $RELEASE = "Fedora 23" ]]; then
 			sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_23/games:openra.repo
-			sudo dnf $METHOD --best --allowerasing install mono-core nuget
+			sudo dnf $METHOD --best --allowerasing install mono-core
 		elif [[ $RELEASE = "Fedora 22" ]]; then
 			sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_22/games:openra.repo
 			sudo dnf $METHOD --best --allowerasing install mono-core
-			if [[ $(uname -m) = "i686" ]];then
-				sudo dnf $METHOD install $WORKING_DIR/data/linux/fedora/nuget-2.8.7-0.fc22.i686.rpm
-			elif [[ $(uname -m) = "x86_64" ]];then
-				sudo dnf $METHOD install $WORKING_DIR/data/linux/fedora/nuget-2.8.7-0.fc22.x86_64.rpm
-			fi
 		fi
 		cd $WORKING_DIR
 		mozroots --import --sync
@@ -332,7 +243,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		mkdir "$RA2_MISSINGDIR2"
 	fi
 
-	cp ./data/patches/*.patch $HOME/openra-master/
+	cp ./data/patches/linux/*.patch $HOME/openra-master/
 
 #*********************************************************************************************************
 ## PART 3/7
@@ -341,7 +252,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
 	echo -e "$bold_in\n3/7 ***Preparing OpenRA source files for Tiberian Sun & Red Alert 2***\n$out"
 	sleep 2
-	for i in $HOME/openra-master/*.patch; do patch -d $HOME/openra-master/$PACKAGE -Np1 --binary < $i; done
+	for i in $HOME/openra-master/*.patch; do patch -d $HOME/openra-master/$PACKAGE -Np1 < $i; done
 
 # Get version number for Red Alert 2 mod (Github)
 RA2_VERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')

@@ -52,7 +52,7 @@ function endtext_fail() {
 echo -e "\nWhoops! Something went wrong. Please check possible error messages above.\n"
 }
 
-function endtext() {
+function endtext_ok() {
 OPENRA_GITVERSION=git-$(git ls-remote https://github.com/OpenRA/OpenRA.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 RA2_GITVERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 
@@ -84,16 +84,34 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 		
 			echo -e "$bold_in\n***Starting OpenRA compilation process.***$out\n"
 			sleep 2
-			rm $WORKING_DIR/data/linux/arch_linux/*.patch
-			cp ./data/patches/*.patch ./data/linux/arch_linux/
+			if [[ -f $(find $WORKING_DIR/data/linux/arch_linux/ -type f -iname "*.patch") ]]; then
+				rm $WORKING_DIR/data/linux/arch_linux/*.patch
+			fi
+			cp ./data/patches/linux/*.patch ./data/linux/arch_linux/
+
+			#Find all old patch occurences in PKGBUILD file and delete them.
+			sed -i '/"git:\/\/github.com\/OpenRA\/ra2.git"/,/sha1sums/{//!d}' $WORKING_DIR/data/linux/arch_linux/PKGBUILD
+			
+			sed -i '//i '${PATCHES}')' $WORKING_DIR/data/linux/arch_linux/PKGBUILD
+			
+			#Find all patch files and list them in PKGBUILD
+			PATCHES=$(find ./data/linux/arch_linux/ -maxdepth 1 -type f -iname "*.patch" | sed -e 's/.*\///' | sed -e ':a;N;$!ba;s/\n/ /g' -e 's/ \+/\\n/g')
+			sed -i '/"git:\/\/github.com\/OpenRA\/ra2.git"/a '${PATCHES}')' $WORKING_DIR/data/linux/arch_linux/PKGBUILD
+			
 			cd ./data/linux/arch_linux
 			rm -rf */
+			if [[ -f $(find $WORKING_DIR/data/linux/arch_linux/ -type f -iname "*.tar.xz") ]]; then
+				rm $WORKING_DIR/data/linux/arch_linux/*.tar.xz 
+			fi
 			updpkgsums
 			makepkg -c
 			
-			if [[ -f $WORKING_DIR/data/linux/arch_linux/*.tar.xz ]]; then
+			if [[ -f $(find $WORKING_DIR/data/linux/arch_linux/ -type f -iname "*.tar.xz") ]]; then
 				mv *.tar.xz $HOME
 			else
+				rm -rf */
+				rm ./*.patch
+				find . -name 'sed*' -delete
 				endtext_fail
 				exit 1
 			fi
@@ -108,11 +126,16 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 				$PACKAGEMANAGER_INSTALL --noconfirm $HOME/$PACKAGE_NAME
 				echo -e "$bold_in\n***OpenRA installation completed.***$out"
 			fi
+			
+			#Find all patch occurences in PKGBUILD file and delete them.
+			sed -i '/"git:\/\/github.com\/OpenRA\/ra2.git"/,/sha1sums/{//!d}' $WORKING_DIR/data/linux/arch_linux/PKGBUILD
+			
 			rm -rf */
 			rm ./*.patch
+			find . -name 'sed*' -delete
 			cd $WORKING_DIR
 
-			if [[ -z $PACKAGE_NAME ]]; then 
+			if [[ -z $PACKAGE_NAME ]]; then 
 				endtext_fail
 				exit 1
 			else
@@ -143,14 +166,13 @@ if [[ $DISTRO =~ "$UBUNTU" ]] || [[ $DISTRO =~ "$DEBIAN" ]]; then
 	PACKAGEMANAGER_REMOVE='sudo apt-get purge --remove'
 	INSTALL_NAME=$(sed -n '/PACKAGE_NAME/{p;q;}' ./data/linux/openra-installscript.sh | sed -n 's/^PACKAGE_NAME=//p')
 	PACKAGE_NAME=$(find $HOME -maxdepth 1 -type f -iname "$INSTALL_NAME*.deb" | sed -e 's/.*\///')
-  
 
-	if [[ -z $PACKAGE_NAME ]]; then 
+	if [[ -z $PACKAGE_NAME ]]; then 
 		endtext_fail
 		if [[ -d $HOME/openra-master ]]; then
 			echo -e "\n"
 			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response2
-			if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			if [[ $response2 =~ ^([yY][eE][sS]|[yY])$ ]]; then
 				echo -e "\nDeleting.\n"
 				rm -Rf $HOME/openra-master
 			fi
@@ -184,8 +206,8 @@ if [[ $DISTRO =~ "$FEDORA" ]] || [[ $DISTRO =~ "$OPENSUSE" ]]; then
 		endtext_fail
 		if [[ -d $HOME/openra-master ]]; then
 			echo -e "\n"
-			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response2
-			if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response3
+			if [[ $response3 =~ ^([yY][eE][sS]|[yY])$ ]]; then
 				echo -e "\nDeleting.\n"
 				rm -Rf $HOME/openra-master
 			fi

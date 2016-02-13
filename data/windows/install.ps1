@@ -135,7 +135,7 @@ while ($true)
 #------------------------------------------------------
 ## Prepare OpenRA source code for Tiberian Sun & Red Alert 2
 
-	Copy-Item ".\data\patches\windows\*.patch" ".\data\windows"
+	Copy-Item ".\data\patches\*.patch" ".\data\windows"
 
 	Start-Sleep -s 3
 	"`nPatching OpenRA source code for Tiberian Sun & Red Alert 2."

@@ -20,15 +20,6 @@
  
  Packages:
  	~^Content/ra2
-@@ -172,7 +172,7 @@
- 	ra2:languages/english.yaml
- 
- LoadScreen: LogoStripeLoadScreen
--	Image: ra2:uibits/loadscreen.png
-+	Image: ./mods/ra2/uibits/loadscreen.png
- 	Text: Carving wooden nickels..., Preparing paratroopers..., Welcoming you to Texas..., Optimizing helium mix..., Receiving thoughts..., Igniting boosters...
- 
- ContentInstaller:
 
 --- a/utility.cmd
 +++ b/utility.cmd

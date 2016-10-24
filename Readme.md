@@ -5,6 +5,7 @@ This Github repository provides a bunch of scripts for installing TS/RA2 on Open
 
 The following operating systems are currently supported:
 
+- Windows 10
 - Windows 7
 - Ubuntu (16.04 LTS, 15.10, 15.04 LTS, 14.10, 14.04 LTS)
 - Linux Mint (17.3, 17.2 & 17.1)

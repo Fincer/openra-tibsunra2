@@ -13,7 +13,7 @@ while ($true)
 	Start-Sleep -s 4
 	"`n- Make sure you have Microsoft .NET Framework 4.5 installed on your computer."
 	Start-Sleep -s 3
-	"`n- This script is NOT made by the OpenRA developers and may contain bugs."
+	"`n- This script is NOT made by the OpenRA developers and may have bugs."
 	Start-Sleep -s 3
 	"`n- If you worry about what the script is doing, you can always check its code (\data\windows\install.ps1)"
 	Start-Sleep -s 4
@@ -83,8 +83,9 @@ while ($true)
 ## Merge OpenRA source files and Red Alert 2 mod files together
 
 	"`nMerging OpenRA source & Red Alert 2 mod files."
-	move-item ".\data\windows\ra2-master\OpenRA.Mods.RA2" ".\data\windows\OpenRA-bleed\OpenRA.Mods.RA2"
-	move-item ".\data\windows\ra2-master" ".\data\windows\OpenRA-bleed\mods\ra2"
+	Copy-Item -Recurse ".\data\windows\ra2-master\OpenRA.Mods.RA2" ".\data\windows\OpenRA-bleed\OpenRA.Mods.RA2"
+	Copy-Item -Recurse ".\data\windows\ra2-master" ".\data\windows\OpenRA-bleed\mods\ra2"
+	Remove-Item -Recurse .\data\windows\ra2-master\*
 
 #------------------------------------------------------
 ## Get OpenRA Git version number
@@ -147,7 +148,7 @@ while ($true)
 	$patchcount = (Get-Childitem .\ | where {$_.extension -eq ".patch"} | Measure-Object ).Count;
 
 	Write-Output "`nExecuting patch.exe $patchcount times now."
-
+	Start-Sleep -s 6
 	Get-ChildItem .\ -include *.patch -recurse | Foreach ($_) {.\patch.exe -d OpenRA-bleed -Np1 -i $_.fullname }
 
 	cd ..
@@ -195,7 +196,11 @@ while ($true)
 	cd ..
 	cd ..
 	cd ..
-	move-item ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows"
+	"`nCopying OpenRA files to the final location.`n"
+	Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows"
+	Remove-Item .\data\windows\OpenRA-bleed\* -Recurse
+	Remove-Item .\data\windows\OpenRA-bleed
+	Remove-Item .\data\windows\ra2-master
 
 #------------------------------------------------------
 ## Post-installation messages

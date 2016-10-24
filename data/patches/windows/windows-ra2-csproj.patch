@@ -1,6 +1,6 @@
 ﻿--- a/OpenRA.Mods.RA2/OpenRA.Mods.RA2.csproj
 +++ b/OpenRA.Mods.RA2/OpenRA.Mods.RA2.csproj
-@@ -12,35 +12,50 @@
+@@ -12,53 +12,64 @@
    <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
      <PlatformTarget>x86</PlatformTarget>
    </PropertyGroup>
@@ -52,14 +52,34 @@
 +    <Reference Include="System" />
 +    <Reference Include="System.Core" />
 +    <Reference Include="System.Drawing" />
-+    <Reference Include="Eluant">
-+      <HintPath>..\thirdparty\download\Eluant.dll</HintPath>
-+      <Private>False</Private>
-+    </Reference>
      <Reference Include="Microsoft.CSharp" />
      <Reference Include="OpenRA.Game">
-       <HintPath>dependencies\OpenRA.Game.exe</HintPath>
-@@ -68,9 +83,26 @@
+-      <HintPath>dependencies\OpenRA.Game.exe</HintPath>
++      <HintPath>..\OpenRA.Mods.RA\OpenRA.Game.exe</HintPath>
+     </Reference>
+     <Reference Include="OpenRA.Mods.Common">
+-      <HintPath>dependencies\OpenRA.Mods.Common.dll</HintPath>
++      <HintPath>..\OpenRA.Mods.RA\OpenRA.Mods.Common.dll</HintPath>
+     </Reference>
+     <Reference Include="OpenRA.Mods.RA">
+-      <HintPath>dependencies\OpenRA.Mods.RA.dll</HintPath>
++      <HintPath>..\OpenRA.Mods.RA\OpenRA.Mods.RA.dll</HintPath>
+     </Reference>
+     <Reference Include="OpenRA.Mods.TS">
+-      <HintPath>dependencies\OpenRA.Mods.TS.dll</HintPath>
++      <HintPath>..\OpenRA.Mods.TS\OpenRA.Mods.TS.dll</HintPath>
+     </Reference>
+     <Reference Include="Eluant">
+-      <HintPath>dependencies\Eluant.dll</HintPath>
++      <HintPath>..\thirdparty\download\Eluant.dll</HintPath>
+     </Reference>
+     <Reference Include="Eluant">
+-      <HintPath>dependencies\Eluant.dll</HintPath>
++      <HintPath>..\thirdparty\download\Eluant.dll</HintPath>
+       <Private>False</Private>
+     </Reference>
+     <Reference Include="System" />
+@@ -68,10 +79,27 @@
    </ItemGroup>
    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
    <ItemGroup>
@@ -86,3 +106,4 @@
 +cd "$(SolutionDir)"</PostBuildEvent>
 +  </PropertyGroup>
  </Project>
+  

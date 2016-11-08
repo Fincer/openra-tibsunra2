@@ -1,0 +1,10 @@
+--- a/OpenRA.Mods.RA2/Traits/Render/WithSwimSuit.cs
++++ b/OpenRA.Mods.RA2/Traits/Render/WithSwimSuit.cs
+@@ -10,6 +10,7 @@
+ #endregion
+ 
+ using OpenRA.Traits;
++using OpenRA.Mods.Common.Traits;
+ 
+ namespace OpenRA.Mods.RA2.Traits
+ {

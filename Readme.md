@@ -20,6 +20,8 @@ That's why, as not official support is not provided yet, I decided to do somethi
 
 **NOTE:** As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable some day.
 
+**NOTE 2:** As APT package manager updates have been dropped from some old Ubuntu based operating systems (such as 14.10), not all required packages to compile OpenRA may be available via internet anymore.
+
 **Installation instructions**
 --------------
 
@@ -136,9 +138,9 @@ Usage: add new patch file into the /data/patches/linux/ directory (Linux) or \da
 
 Hotfixes are considered as patches as well (yes, they are patch files, too). The main difference between patches and hotfixes is that hotfixes are meant to be used to fix bugs or add features in the game codebase whereas patches just make OpenRA compilation process with Tiberian Sun & Red Alert 2 possible. 
 
-Hotfixes are unofficial in nature. They've not officially been applied by OpenRA devs or any other party and thus playing the game with them may make your version of openra-tibsunra2 incompatible with the official 'openra-bleed' and RA2 mod, even if git version numbers match with other players you see in the lobby.
+Hotfixes are unofficial in nature. They've not officially been applied by OpenRA developers or any other party and thus playing the game with them may make your version of openra-tibsunra2 incompatible with the official 'openra-bleed' and RA2 mod, even if git version numbers match with other players you see in the lobby.
 
-Hotfixes can be used with other players but they must have been applied into openra-tibsunra2 versions of these players as well (not forgetting compatibility of git version numbers).
+Hotfixes can be used with other players. However, the hotfixes must have been applied into openra-tibsunra2 versions of any players you want to play with (not forgetting compatibility of git version numbers).
 
 Hotfixes are optional and they've been disabled by default.
 
@@ -150,10 +152,10 @@ Usage: add new hotfix patch file into the /data/hotfixes/linux/ directory (Linux
 
 **Why are Windows & Linux separated (patches/hotfixes)?**
 
-The main reason for this is because Windows & Linux use different line endings in patch files. Differences in end of lines may make patch files incompatible in other OS so consider this more or less as a precaution.
+The main reason for this is because Windows & Linux use different line endings in patch files. Different end of lines may make patch files incompatible in other OS so consider this more or less as a precaution.
 
 **How do I create new hotfixes?**
 
 You need a Unix tool 'diff' to create new hotfixes (patch files). For additional information, please see, for example, http://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/
 
-Remember to check "end of line" (Windows/Unix) for every hotfix patch file you create.
+Remember to check "end of line" (Windows or Unix) for every hotfix patch file you create.

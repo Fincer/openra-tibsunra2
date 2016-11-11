@@ -154,6 +154,24 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	fi
 	read -r -p "Please type 1 or 2 (Default: 2): " number
 	sleep 1
+
+	if [[ ! $(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | wc -l) -eq 0 ]]; then
+		echo -e "\nHotfixes -- Question\n"
+		echo -e "Use custom hotfixes if added by the user (Default: No)?\nNOTE: If you choose YES (y), be aware that your OpenRA/RA2 version will likely not be compatible with the other players unless they've applied exactly same hotfixes in their game versions, too!"
+		echo -e "\nAvailable hotfixes are:\n"
+		echo -e $green_in$(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | sed -e 's/.*\///' -e 's/\.[^\.]*$//')$out
+		echo -e ""
+		read -r -p "Use these hotfixes? (y/N) " hotfixes
+
+		if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			echo -e "\nHotfixes applied. Continuing."
+			sleep 2
+		else
+			echo -e "\nHotfixes ignored and skipped. Continuing."
+			sleep 2
+		fi
+	fi
+	
 	if [[ $number -eq 1 ]]; then
 		METHOD=''
 		echo -e "\nSelected installation method:$bold_in Manual$out"
@@ -164,6 +182,16 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		elif [[ $DISTRO =~ $OPENSUSE ]]; then
 			METHOD='--non-interactive --no-gpg-checks'
 			echo -e "\nSelected installation method:$bold_in Automatic$out"
+		fi
+	fi
+
+	if [[ $(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | wc -l) -eq 0 ]]; then
+	echo -e "Available hotfixes:$bold_in None$out"
+	else
+		if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			echo -e "Use hotfixes:$bold_in Yes$out"
+		else
+			echo -e "Use hotfixes:$bold_in No$out"
 		fi
 	fi
 
@@ -244,6 +272,10 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	fi
 
 	cp ./data/patches/linux/*.patch $HOME/openra-master/
+
+	if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+		cp ./data/hotfixes/linux/*.patch $HOME/openra-master/
+	fi
 
 #*********************************************************************************************************
 ## PART 3/7

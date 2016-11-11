@@ -42,6 +42,7 @@ FEDORA="Fedora"
 
 bold_in='\e[1m'
 dim_in='\e[2m'
+green_in='\e[32m'
 out='\e[0m'
 PACKAGEMANAGER_INSTALL=1
 PACKAGEMANAGER_REMOVE=1
@@ -58,7 +59,7 @@ RA2_GITVERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 |
 
 echo -e  "$bold_in\n***OpenRA compilation script completed.\nPlease see further instructions below.***$out"
 sleep 2
-echo -e "$bold_in\n***MANUAL INSTALLATION***$out\n\nInstall OpenRA by typing '$PACKAGEMANAGER_INSTALL $HOME/$PACKAGE_NAME' (without quotations) in a terminal window."
+echo -e "$bold_in\n***MANUAL INSTALLATION***$out\n\nInstall OpenRA by typing '$PACKAGEMANAGER_INSTALL $WORKING_DIR/$PACKAGE_NAME' (without quotations) in a terminal window."
 sleep 4
 echo -e "$bold_in\n***TIBERIAN SUN & RED ALERT 2 - HOWTO***$out\n\nTO PLAY TIBERIAN SUN: Launch the game and download the required asset files from the web when the game asks you to do so.\n\nTO PLAY RED ALERT 2: You must install language.mix, multi.mix, ra2.mix and theme.mix into '$HOME/.openra/Content/ra2/' folder. You find these files from original RA2 installation media (CD's):\n\n-theme.mix, multi.mix = RA2 CD Root folder\n-ra2.mix, language.mix = RA2 CD Root/INSTALL/Game1.CAB (inside that archive file)$bold_in\n\n***LAUNCHING OPENRA***$out\n\nTo launch OpenRA, simply type 'openra' (without quotations) in your terminal or use a desktop shortcut file.$bold_in\n\n***UNINSTALLATION***$out\n\nIf you want to remove OpenRA, just type '$PACKAGEMANAGER_REMOVE $INSTALL_NAME' (without quotations)\n\nYou can find package of $INSTALL_NAME in '$HOME' for further usage.$bold_in\n\n***MULTIPLAYER***$out\n\nIt's recommended to build OpenRA using exactly same GIT source files for multiplayer usage to minimize possible version differences/conflicts between players. Please make sure all players have exactly same git versions of their in-game mods (RA, CNC, D2K, TS, RA2). Version numbers are formatted like 'git-e0d7445' etc. and can be found in each mod description in the mod selection menu.\n\nFor this compilation, the version numbers are as follows:\nOpenRA version: $OPENRA_GITVERSION\nRA2 version: $RA2_GITVERSION\n\nHave fun!\n"
 }
@@ -76,18 +77,45 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 	
 			read -r -p "Please type 1 or 2 (Default: 2): " number
 			sleep 1
+
+			rm $WORKING_DIR/data/linux/arch_linux/*.patch
+			cp ./data/patches/linux/*.patch ./data/linux/arch_linux/
+
+			if [[ ! $(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | wc -l) -eq 0 ]]; then
+				echo -e "\nHotfixes -- Question\n"
+				echo -e "Use custom hotfixes if added by the user (Default: No)?\nNOTE: If you choose YES (y), be aware that your OpenRA/RA2 version will likely not be compatible with the other players unless they've applied exactly same hotfixes in their game versions, too!"
+				echo -e "\nAvailable hotfixes are:\n"
+				echo -e $green_in$(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | sed -e 's/.*\///' -e 's/\.[^\.]*$//')$out
+				echo -e ""
+				read -r -p "Use these hotfixes? (y/N) " hotfixes
+					if [[ $hotfixes =~ ^([nN][oO][nN]|)$ ]]; then
+						echo -e "\nHotfixes ignored and skipped. Continuing."
+					elif [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+						cp ./data/hotfixes/linux/*.patch ./data/linux/arch_linux/
+						echo -e "\nHotfixes applied. Continuing."
+					else
+						echo -e "\nHotfixes ignored and skipped. Continuing."
+					fi
+			fi
+
 			if [[ $number -eq 1 ]]; then
 				echo -e "\nSelected installation method:$bold_in Manual$out"
 			else
 				echo -e "\nSelected installation method:$bold_in Automatic$out"
 			fi
-		
+
+			if [[ $(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | wc -l) -eq 0 ]]; then
+			echo -e "Available hotfixes:$bold_in None$out"
+			else
+				if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+					echo -e "Use hotfixes:$bold_in Yes$out"
+				else
+					echo -e "Use hotfixes:$bold_in No$out"
+				fi
+			fi
+			sleep 3
 			echo -e "$bold_in\n***Starting OpenRA compilation process.***$out\n"
 			sleep 2
-			if [[ -f $(find $WORKING_DIR/data/linux/arch_linux/ -type f -iname "*.patch") ]]; then
-				rm $WORKING_DIR/data/linux/arch_linux/*.patch
-			fi
-			cp ./data/patches/linux/*.patch ./data/linux/arch_linux/
 
 			#Find all old patch occurences in PKGBUILD file and delete them.
 			sed -i '/"git:\/\/github.com\/OpenRA\/ra2.git"/,/sha1sums/{//!d}' $WORKING_DIR/data/linux/arch_linux/PKGBUILD
@@ -107,7 +135,7 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			makepkg -c
 			
 			if [[ -f $(find $WORKING_DIR/data/linux/arch_linux/ -type f -iname "*.tar.xz") ]]; then
-				mv *.tar.xz $HOME
+				mv *.tar.xz $WORKING_DIR
 			else
 				rm -rf */
 				rm ./*.patch
@@ -119,11 +147,13 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			PACKAGEMANAGER_INSTALL='sudo pacman -U'
 			PACKAGEMANAGER_REMOVE='sudo pacman -Rs'
 			INSTALL_NAME=$(sed -n '/pkgname/{p;q;}' ./PKGBUILD | sed -n 's/^pkgname=//p')
-			PACKAGE_NAME=$(find $HOME -maxdepth 1 -type f -iname "$INSTALL_NAME*.tar.xz" | sed -e 's/.*\///')
+			PACKAGE_NAME=$(find $WORKING_DIR -maxdepth 1 -type f -iname "$INSTALL_NAME*.tar.xz" | sed -e 's/.*\///')
 
 			if [[ ! $number -eq 1 ]]; then
 				echo -e "$bold_in\n***Installing OpenRA (root password required).***$out\n"
-				$PACKAGEMANAGER_INSTALL --noconfirm $HOME/$PACKAGE_NAME
+				echo -e "NOTE: If the installation fails, this may happen because multiple openra-tibsunra2 tar.xz files have been found in $WORKING_DIR folder.\n"
+				sleep 2
+				$PACKAGEMANAGER_INSTALL --noconfirm $WORKING_DIR/$PACKAGE_NAME
 				echo -e "$bold_in\n***OpenRA installation completed.***$out"
 			fi
 			

@@ -23,6 +23,34 @@ while ($true)
 	Start-Sleep -s 3
 
 #------------------------------------------------------
+## Hotfix question
+
+If (Test-Path ".\data\hotfixes\windows\*.patch"){
+
+	"`n- Hotfixes -- Question`n"
+
+	"Use custom hotfixes if added by the user (Default: No)?\nNOTE: If you choose YES (y), be aware that your OpenRA/RA2 version will likely not be compatible with the other players unless they've applied exactly same hotfixes in their game versions, too!"
+
+	"`nAvailable hotfixes are:"
+
+	##List available hotfix files:
+
+	get-childitem ".\data\hotfixes\windows\" -recurse | where {$_.extension -eq '.patch'} | format-table Name
+
+	$hotfixes = Read-Host "Use these hotfixes? (y/N)"
+
+	if ($hotfixes -eq "y") {
+	"`nHotfixes applied. Continuing."
+	} else {
+	"`nHotfixes ignored and skipped. Continuing."
+	}
+
+}Else{
+	"`nAvailable hotfixes: None"
+}
+	Start-Sleep -s 2
+
+#------------------------------------------------------
 ## Remove all old source files if they exist
 
 	"`nRemoving all old source files that may exist in the data directory."
@@ -138,12 +166,16 @@ while ($true)
 
 	Copy-Item ".\data\patches\windows\*.patch" ".\data\windows"
 
+	if ($hotfixes -eq "y") {
+	Copy-Item ".\data\hotfixes\windows\*.patch" ".\data\windows"
+	}
+
 	Start-Sleep -s 3
 	"`nPatching OpenRA source code for Tiberian Sun & Red Alert 2."
 
 	cd .\data\windows
 
-	"`nFor each time a patch is being applied, UAC may ask permission for patch.exe."
+	"`nFor each time a patch/hotfix is being applied, UAC may ask permission for patch.exe."
 
 	$patchcount = (Get-Childitem .\ | where {$_.extension -eq ".patch"} | Measure-Object ).Count;
 

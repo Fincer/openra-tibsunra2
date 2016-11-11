@@ -114,3 +114,46 @@ sudo pacman -Rs openra-bleed-tibsunra2
 ```
 
 in your terminal window. 
+
+**About patches & hotfixes**
+--------------
+
+**Patches**
+
+Patches are files that are being used for patching the main game (OpenRA) so that it compiles successfully with Tiberian Sun & Red Alert 2 added. 
+
+Basically, Red Alert 2 locates in a different Github repository so patches are needed in order to merge it successfully with the OpenRA codebase. Additionally, some minor patch codes have been added for compilation of Tiberian Sun.
+
+Patches do not affect any bugs or features existing in the game.
+
+```
+Location: /data/patches/
+```
+
+Usage: add new patch file into the /data/patches/linux/ directory (Linux) or \data\patches\windows\ (Windows)
+
+**Hotfixes**
+
+Hotfixes are considered as patches as well (yes, they are patch files, too). The main difference between patches and hotfixes is that hotfixes are meant to be used to fix bugs or add features in the game codebase whereas patches just make OpenRA compilation process with Tiberian Sun & Red Alert 2 possible. 
+
+Hotfixes are unofficial in nature. They've not officially been applied by OpenRA devs or any other party and thus playing the game with them may make your version of openra-tibsunra2 incompatible with the official 'openra-bleed' and RA2 mod, even if git version numbers match with other players you see in the lobby.
+
+Hotfixes can be used with other players but they must have been applied into openra-tibsunra2 versions of these players as well (not forgetting compatibility of git version numbers).
+
+Hotfixes are optional and they've been disabled by default.
+
+```
+Location: /data/hotfixes/
+```
+
+Usage: add new hotfix patch file into the /data/hotfixes/linux/ directory (Linux) or \data\hotfixes\windows\ (Windows)
+
+**Why are Windows & Linux separated (patches/hotfixes)?**
+
+The main reason for this is because Windows & Linux use different line endings in patch files. Differences in end of lines may make patch files incompatible in other OS so consider this more or less as a precaution.
+
+**How do I create new hotfixes?**
+
+You need a Unix tool 'diff' to create new hotfixes (patch files). For additional information, please see, for example, http://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/
+
+Remember to check "end of line" (Windows/Unix) for every hotfix patch file you create.

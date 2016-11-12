@@ -8,36 +8,34 @@
  	Voiced:
  		VoiceSet: GIVoice
  	ProducibleWithLevel:
-@@ -158,6 +159,10 @@
- 		Weapon: awp
- 	AttackFrontal:
- 		Voice: Attack
-+	WithInfantryBody:
-+		DefaultAttackSequence: shoot
-+	QuantizeFacingsFromSequence:
-+		Sequence: stand
- 	Voiced:
+@@ -162,6 +163,8 @@
  		VoiceSet: SniperVoice
  	ProducibleWithLevel:
-@@ -272,6 +277,8 @@
- 		VoiceSet: SealVoice
- 	ProducibleWithLevel:
  		Prerequisites: barracks.infiltrated
 +	WithInfantryBody:
 +		DefaultAttackSequence: shoot
+ 
+ spy:
+ 	Inherits: ^Infantry
+@@ -274,6 +277,8 @@
+ 		Prerequisites: barracks.infiltrated
  	QuantizeFacingsFromSequence:
  		Sequence: stand
++	WithInfantryBody:
++		DefaultAttackSequence: shoot
  	WithSwimSuit:
-@@ -337,6 +344,8 @@
- 		VoiceSet: TanyaVoice
- 	ProducibleWithLevel:
+ 	-TakeCover: # TODO: allow multiple sequence modifiers
+ 
+@@ -339,6 +344,8 @@
  		Prerequisites: barracks.infiltrated
-+	WithInfantryBody:
-+		DefaultAttackSequence: shoot
  	QuantizeFacingsFromSequence:
  		Sequence: stand
++	WithInfantryBody:
++		DefaultAttackSequence: shoot
  	-TakeCover: # TODO: allow multiple sequence modifiers
-@@ -393,7 +402,7 @@
+ 	WithSwimSuit:
+ 
+@@ -393,7 +400,7 @@
  	WithInfantryBody:
  		StandSequence: fly
  		MoveSequence: fly
@@ -46,7 +44,7 @@
  		IdleSequences: idle-air
  	Hovers:
  		OffsetModifier: -45
-@@ -454,3 +463,5 @@
+@@ -454,3 +461,5 @@
  		Weapon: NeutronRifle
  	AttackFrontal:
  		Voice: Attack
@@ -55,19 +53,27 @@
 
 --- a/mods/ra2/rules/allied-naval.yaml
 +++ b/mods/ra2/rules/allied-naval.yaml
-@@ -202,9 +202,10 @@
- 		ExplodeInstead: true
- 	RenderDetectionCircle:
+@@ -204,7 +204,7 @@
  	RenderSprites:
-+	QuantizeFacingsFromSequence:
-+		Sequence: stand
  	WithInfantryBody:
--		StandSequences: stand
+ 		StandSequences: stand
 -		AttackSequence: shoot
 +		DefaultAttackSequence: shoot
  	WithDeathAnimation:
  		UseDeathTypeSuffix: false
  	Repairable:
+
+--- a/mods/ra2/rules/defaults.yaml
++++ b/mods/ra2/rules/defaults.yaml
+@@ -297,7 +297,7 @@
+ 	WithInfantryBody:
+ 		IdleSequences: idle1,idle2
+ 		StandSequences: stand
+-		AttackSequence: shoot
++		DefaultAttackSequence: shoot
+ 		UpgradeTypes: parachute
+ 		UpgradeMaxEnabledLevel: 0
+ 	WithDeathAnimation@normal:
 
 --- a/mods/ra2/rules/soviet-infantry.yaml
 +++ b/mods/ra2/rules/soviet-infantry.yaml
@@ -79,16 +85,15 @@
  	Voiced:
  		VoiceSet: ConscriptVoice
  	ProducibleWithLevel:
-@@ -84,7 +85,7 @@
+@@ -84,6 +85,7 @@
  		UpgradeTypes: eliteweapon
  		UpgradeMinEnabledLevel: 1
  	WithInfantryBody:
--		IdleAnimation:
 +		DefaultAttackSequence: shoot
+ 		IdleAnimation:
  	Voiced:
  		VoiceSet: FlakTrooperVoice
- 	ProducibleWithLevel:
-@@ -141,6 +142,7 @@
+@@ -141,6 +143,7 @@
  		SelfReloads: true
  		SelfReloadTicks: 70
  	WithInfantryBody:
@@ -96,7 +101,7 @@
  	UpgradeActorsNear:
  		Upgrades: charged
  		Range: 1c256
-@@ -226,6 +228,7 @@
+@@ -226,6 +229,7 @@
  	AttackFrontal:
  		Voice: Attack
  	WithInfantryBody:
@@ -104,18 +109,23 @@
  	Voiced:
  		VoiceSet: DesolatorVoice
  	ProducibleWithLevel:
+@@ -277,6 +281,7 @@
+ 		OutsideRangeCursor: bomb
+ 	TakeCover:
+ 	WithInfantryBody:
++		DefaultAttackSequence: shoot
+ 		IdleSequences: idle1,idle2
+ 	QuantizeFacingsFromSequence:
+ 		Sequence: stand
 
 --- a/mods/ra2/rules/soviet-naval.yaml
 +++ b/mods/ra2/rules/soviet-naval.yaml
-@@ -205,8 +205,9 @@
- 		ExplodeInstead: true
+@@ -206,7 +206,7 @@
  	RenderDetectionCircle:
  	WithInfantryBody:
--		StandSequences: stand
- 		AttackSequence: punch
+ 		StandSequences: stand
+-		AttackSequence: punch
++		DefaultAttackSequence: punch
  	Repairable:
  		Voice: Attack
--		RepairBuildings: gayard, nayard
-+		RepairBuildings: gayard
-+	QuantizeFacingsFromSequence:
-+		Sequence: stand
+ 		RepairBuildings: gayard, nayard

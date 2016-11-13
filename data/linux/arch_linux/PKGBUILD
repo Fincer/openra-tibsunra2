@@ -1,7 +1,7 @@
 # Maintainer: Fincer <fincer89 at hotmail dot com>
 
 pkgname=openra-bleed-tibsunra2
-pkgver=r20059.613854d
+pkgver=r22238.0479b7f
 pkgrel=1
 pkgdesc="An open-source implementation of the Red Alert engine using .NET/mono and OpenGL (git version)"
 arch=("any")
@@ -17,7 +17,8 @@ source=("$pkgname-src::git+https://github.com/OpenRA/OpenRA.git#branch=bleed"
 sha1sums=('SKIP'
           'SKIP'
           '2e67a7f84d78d7b9ce8981ebb578c7b744406406'
-          'ed794d2538ab53c747b10ab3a013f667eb455815')
+          '412fb02c061918c1a997359713427fa357340a91'
+          '5d73aedf0b3f6736981c727646c122d3c75ea27b')
 
 pkgver() {
     cd "$srcdir/$pkgname-src"
@@ -41,6 +42,7 @@ build() {
 # Get Red Alert 2 GIT version number
     ra2_version=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
     sed -i "s/Version: {DEV_VERSION}/Version: $ra2_version/g" $srcdir/$pkgname-src/mods/ra2/mod.yaml
+    sed -i "s/maps\/ra2\/{DEV_VERSION}/maps\/ra2\/$ra2_version/g" $srcdir/$pkgname-src/mods/ra2/mod.yaml
     
     cd "$srcdir/$pkgname-src"
     make version

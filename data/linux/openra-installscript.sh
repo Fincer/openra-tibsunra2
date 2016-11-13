@@ -290,6 +290,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 RA2_VERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 
 	sed -i "s/Version: {DEV_VERSION}/Version: $RA2_VERSION/g" $HOME/openra-master/$PACKAGE/mods/ra2/mod.yaml
+	sed -i "s/maps\/ra2\/{DEV_VERSION}/maps\/ra2\/$RA2_VERSION/g" $HOME/openra-master/$PACKAGE/mods/ra2/mod.yaml
 
 #*********************************************************************************************************
 ## PART 4/7

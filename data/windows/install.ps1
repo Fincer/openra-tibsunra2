@@ -5,9 +5,17 @@ while ($true)
 {
 
 #------------------------------------------------------
+## Test Internet connection
+
+If (-Not (Test-Connection -computer github.com -count 3 -quiet)) {
+	"`nCan't connect to Github. Please check your internet connection and try again."
+	exit
+  }
+
+#------------------------------------------------------
 ## Initial script messages
 
-	"***Welcome Comrade***"
+	"`n***Welcome Comrade***"
 	Start-Sleep -s 3
 	"`nThis script will generate OpenRA with Tiberian Sun & Red Alert 2 for Windows."
 	Start-Sleep -s 4
@@ -36,6 +44,8 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	##List available hotfix files:
 
 	get-childitem ".\data\hotfixes\windows\" -recurse | where {$_.extension -eq '.patch'} | format-table Name
+
+	"More information about hotfixes: https://github.com/Fincer/openra-tibsunra2/#about-patches--hotfixes`n"
 
 	$hotfixes = Read-Host "Use these hotfixes? (y/N)"
 
@@ -139,6 +149,10 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 
 	$openra_gitversion = [IO.File]::ReadAllText(".\data\windows\openra-latestcommit.txt").trim("`r`n")
 	Write-Output "`nOpenRA version: $openra_gitversion"
+
+#This is used in folder name
+	$openra_folderversion = [IO.File]::ReadAllText(".\data\windows\openra-latestcommit.txt").trim("`r`ngit")
+
 #------------------------------------------------------
 ## Get Red Alert 2 Git version number
 
@@ -161,6 +175,10 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 
 	$ra2_gitversion = [IO.File]::ReadAllText(".\data\windows\ra2-latestcommit.txt").trim("`r`n")
 	Write-Output "RA2 version: $ra2_gitversion"
+
+#This is used in folder name
+	$ra2_folderversion = [IO.File]::ReadAllText(".\data\windows\ra2-latestcommit.txt").trim("`r`ngit")
+
 #------------------------------------------------------
 ## Prepare OpenRA source code for Tiberian Sun & Red Alert 2
 
@@ -228,8 +246,74 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	cd ..
 	cd ..
 	cd ..
-	"`nCopying OpenRA files to the final location.`n"
-	Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows"
+	"`nCopying OpenRA files to the final location. This takes a while. Please wait.`n"
+
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Platforms.Default
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.Common
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.Cnc
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.D2k
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.RA
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.TS
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.RA2
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Server
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Test
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Utility
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.GameMonitor
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Game
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\packaging
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\thirdparty
+
+	Remove-Item .\data\windows\OpenRA-bleed\.editorconfig
+	Remove-Item .\data\windows\OpenRA-bleed\.gitattributes
+	Remove-Item .\data\windows\OpenRA-bleed\.gitignore
+	Remove-Item .\data\windows\OpenRA-bleed\.kateproject
+	Remove-Item .\data\windows\OpenRA-bleed\.travis.yml
+	Remove-Item .\data\windows\OpenRA-bleed\CONTRIBUTING.md
+	Remove-Item .\data\windows\OpenRA-bleed\COPYING
+	Remove-Item .\data\windows\OpenRA-bleed\ConvertFrom-Markdown.ps1
+	Remove-Item .\data\windows\OpenRA-bleed\INSTALL.md
+	Remove-Item .\data\windows\OpenRA-bleed\Makefile
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.sln
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.sln.orig
+	Remove-Item .\data\windows\OpenRA-bleed\README.md
+	Remove-Item .\data\windows\OpenRA-bleed\Settings.StyleCop
+	Remove-Item .\data\windows\OpenRA-bleed\make.ps1
+	Remove-Item .\data\windows\OpenRA-bleed\make.ps1.orig
+	Remove-Item .\data\windows\OpenRA-bleed\make.cmd
+	Remove-Item .\data\windows\OpenRA-bleed\launch-game.sh
+	Remove-Item .\data\windows\OpenRA-bleed\launch-dedicated.sh
+	Remove-Item .\data\windows\OpenRA-bleed\appveyor.yml
+	Remove-Item .\data\windows\OpenRA-bleed\dupFinder.xslt
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Game.exe.config
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Game.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Server.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Platforms.Default.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.dll.config
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Utility.exe.config
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.nunit
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Utility.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\AUTHORS
+
+	Remove-Item .\data\windows\OpenRA-bleed\mods\cnc\OpenRA.Mods.Cnc.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\mods\common\OpenRA.Mods.Common.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\mods\d2k\OpenRA.Mods.D2k.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra\OpenRA.Mods.RA.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ts\OpenRA.Mods.TS.pdb
+
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\build.cake
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\makefile
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\make.ps1
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\mod.yaml.orig
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\.gitattributes
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\.gitignore
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\.travis.yml
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\make.cmd
+	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\fetch-content.sh
+	Remove-Item -Recurse .\data\windows\OpenRA-bleed\mods\ra2\OpenRA.Mods.RA2
+
+	Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion"
 	Remove-Item .\data\windows\OpenRA-bleed\* -Recurse
 	Remove-Item .\data\windows\OpenRA-bleed
 	Remove-Item .\data\windows\ra2-master
@@ -237,7 +321,7 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 #------------------------------------------------------
 ## Post-installation messages
 
-	"`nCompilation process completed. You find the game inside 'OpenRA-tibsunra2-Windows' folder"
+	"`nCompilation process completed. You find the game inside 'OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion' folder"
 	Start-Sleep -s 4
 	"`nTO PLAY OPENRA: Click OpenRA.exe (maybe you should create a desktop shortcut for it?)"
 	"`nTO PLAY TIBERIAN SUN: Launch the game and download the required asset files from the web when the game asks you to do so."

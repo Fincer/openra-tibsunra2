@@ -19,7 +19,7 @@ Manual installation from source code suggested by the official OpenRA wiki is a 
 
 **Sounds cool! How to use it?**
 
-1. Click green "Clone or download" button (top-right on this page) -> Download ZIP
+1. [Download the script](https://github.com/Fincer/openra-tibsunra2/archive/master.zip)
 2. Unzip the contents on your computer
 3. Check [Installation instructions](https://github.com/Fincer/openra-tibsunra2#installation-instructions)
 

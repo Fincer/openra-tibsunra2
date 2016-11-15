@@ -7,13 +7,27 @@ Receiving thoughts...
 Introduction
 ==============
 
-This Github repository provides a bunch of scripts for installing Tiberian Sun & RA2 on [OpenRA](http://www.openra.net/ "OpenRA homepage").
+**What is this all about?**
 
-A lot of people want to play Tiberian Sun & Red Alert 2 mods in OpenRA. As automatic steps to achieve this goal are not yet officially provided by OpenRA development team, this Github repository was created.
+This Github repository provides a bunch of scripts for installing Tiberian Sun & RA2 on [OpenRA](http://www.openra.net/ "OpenRA homepage"), an open source implementation of classic Westwood RTS games.
+
+Tiberian Sun & Red Alert 2 are still officially "unfinished titles" in OpenRA, and thus not yet provided by official OpenRA sites as an easy download option. Their current gameplay status is considered as "pre-alpha", "not ready" or "only accessible to OpenRA developers".
+
+Still, a lot of people want to play or try Tiberian Sun & Red Alert 2 mods in OpenRA. It is possible. As automatic steps to achieve this goal are not yet officially provided by OpenRA development team, this Github repository was created.
 
 Manual installation from source code suggested by the official OpenRA wiki is a major roadblock for many players. This repository is here to help on the installation process as much as possible by automating the process. No step-by-step wiki instructions or any understanding about compilation processes needed at all.
 
-Just launch the script, follow instructions, take a cup of coffee or whatever and wait for compiled game. Click and play. Sounds good? Yes. Works? Likely.
+**Sounds cool! How to use it?**
+
+1. Click green "Clone or download" button (top-right on this page) -> Download ZIP
+2. Unzip the contents on your computer
+3. Check [Installation instructions](https://github.com/Fincer/openra-tibsunra2#installation-instructions)
+
+4. Then...
+..* Just launch the script, follow instructions, take a cup of coffee or whatever and wait for compiled game. 
+5. Click and play 
+
+Sounds good? Yes. Works? Likely.
 
 P.S. FAQ about the script at the bottom of this page.
 

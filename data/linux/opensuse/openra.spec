@@ -83,6 +83,14 @@ make DESTDIR="%{buildroot}" prefix=%{_prefix} install-linux-mime
 make DESTDIR="%{buildroot}" prefix=%{_prefix} install-linux-appdata
 make DESTDIR="%{buildroot}" prefix=%{_prefix} install-man-page
 
+rm -rf %{buildroot}/usr/lib/openra/{SharpFont.dll.config,SDL2-CS.dll.config,OpenAL-CS.dll.config,Eluant.dll.config}
+rm -rf %{buildroot}/usr/lib/openra/mods/cnc/OpenRA.Mods.Cnc.dll.mdb
+rm -rf %{buildroot}/usr/lib/openra/mods/common/OpenRA.Mods.Common.dll.mdb
+rm -rf %{buildroot}/usr/lib/openra/mods/d2k/OpenRA.Mods.D2k.dll.mdb
+rm -rf %{buildroot}/usr/lib/openra/mods/ra/OpenRA.Mods.RA.dll.mdb
+rm -rf %{buildroot}/usr/lib/openra/mods/ra2/{.gitattributes,.gitignore,.travis.yml,build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
+rm -rf %{buildroot}/usr/lib/openra/mods/ts/OpenRA.Mods.TS.dll.mdb
+
 %if 0%{?suse_version}
 %fdupes %{buildroot}%{_prefix}/lib
 %endif
@@ -104,6 +112,7 @@ make DESTDIR="%{buildroot}" prefix=%{_prefix} uninstall
 %defattr(-,root,root)
 %doc DOCUMENTATION.md Lua-API.md README.md
 %{_bindir}/openra
+%{_bindir}/openra-server
 %{_prefix}/lib/openra/
 %{_datadir}/applications/*.desktop
 %{_datadir}/icons/hicolor/*/apps/*

@@ -25,6 +25,16 @@ if [[ $UID = 0 ]]; then
 fi
 
 ##-------------------------------------------------------------
+# Check internet connection
+
+INTERNET_TEST=$(ping -c 3 github.com 2>&1 | grep -c "unknown host") #Ping Github three times and look for string 'unknown host'
+
+if [[ ! $INTERNET_TEST -eq 0 ]]; then #If 'unknown host' string is found, then
+	echo -e "\nCan't connect to Github. Please check your internet connection and try again.\n"
+	exit 1
+fi
+
+##-------------------------------------------------------------
 # Get our current directory
 WORKING_DIR=$(pwd)
 
@@ -86,8 +96,8 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 				echo -e "Use custom hotfixes if added by the user (Default: No)?\nNOTE: If you choose YES (y), be aware that your OpenRA/RA2 version will likely not be compatible with the other players unless they've applied exactly same hotfixes in their game versions, too!"
 				echo -e "\nAvailable hotfixes are:\n"
 				echo -e $green_in$(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | sed -e 's/.*\///' -e 's/\.[^\.]*$//')$out
-				echo -e ""
-				read -r -p "Use these hotfixes? (y/N) " hotfixes
+				echo -e "\nMore information about hotfixes: https://github.com/Fincer/openra-tibsunra2/#about-patches--hotfixes\n"
+				read -r -p "Use these hotfixes? [y/N] " hotfixes
 					if [[ $hotfixes =~ ^([nN][oO][nN]|)$ ]]; then
 						echo -e "\nHotfixes ignored and skipped. Continuing."
 					elif [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then

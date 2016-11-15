@@ -22,10 +22,8 @@ Manual installation from source code suggested by the official OpenRA wiki is a 
 1. [Download the script](https://github.com/Fincer/openra-tibsunra2/archive/master.zip)
 2. Unzip the contents on your computer
 3. Check [Installation instructions](https://github.com/Fincer/openra-tibsunra2#installation-instructions)
-
-4. Then...
-..* Just launch the script, follow instructions, take a cup of coffee or whatever and wait for compiled game. 
-5. Click and play 
+4. Then just launch the script, follow instructions, take a cup of coffee or whatever and wait for compiled game. 
+5. Click and play
 
 Sounds good? Yes. Works? Likely.
 

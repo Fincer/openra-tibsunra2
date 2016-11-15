@@ -86,9 +86,13 @@ Launch the game and download the required asset files from the web when the game
 
 You must install language.mix, multi.mix, ra2.mix and theme.mix into 
 
+```
 \My Documents\OpenRA\Content\ra2\ (Windows)
+```
 
-.openra/Content/ra2/ (linux) 
+```
+.openra/Content/ra2/ (linux)
+```
 
 You find these files from original RA2 installation media (CD's):
 

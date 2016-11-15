@@ -1,26 +1,52 @@
+Welcoming you to Texas...
+Receiving thoughts...
+
+[![OpenRA/RA2](https://img.youtube.com/vi/QrL8m48TePY/mqdefault.jpg)](http://www.youtube.com/watch?v=QrL8m48TePY) [![OpenRA/RA2](https://img.youtube.com/vi/RgJyFMpCA7M/mqdefault.jpg)](http://www.youtube.com/watch?v=RgJyFMpCA7M)
+
 Introduction
 ==============
 
-This Github repository provides a bunch of scripts for installing TS/RA2 on OpenRA.
+This Github repository provides a bunch of scripts for installing Tiberian Sun & RA2 on [OpenRA](http://www.openra.net/ "OpenRA homepage").
 
-The following operating systems are currently supported:
+A lot of people want to play Tiberian Sun & Red Alert 2 mods in OpenRA. As automatic steps to achieve this goal are not yet officially provided by OpenRA development team, this Github repository was created.
+
+Manual installation from source code suggested by the official OpenRA wiki is a major roadblock for many players. This repository is here to help on the installation process as much as possible by automating the process. No step-by-step wiki instructions or any understanding about compilation processes needed at all.
+
+Just launch the script, follow instructions, take a cup of coffee or whatever and wait for compiled game. Click and play. Sounds good? Yes. Works? Likely.
+
+P.S. FAQ about the script at the bottom of this page.
+
+**NOTE:** As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable or needless some day. For example, if RA2 gets merged into official OpenRA Github repository OR/AND playing RA2/TS is not artificially prevented in OpenRA.
+
+**Operating Systems**
+--------------
+![alt text](https://i.ytimg.com/vi/5AjReRMoG3Y/default.jpg "Operating Systems")
+
+OS specific script working status listed below.
+
+**Last update:** 15th November 2016
+
+Works. The following operating systems are currently supported:
 
 - Windows 10
 - Windows 7
-- Ubuntu (16.04 LTS, 15.10, 15.04 LTS, 14.10, 14.04 LTS)
-- Linux Mint (17.3, 17.2 & 17.1)
+- Ubuntu (16.10, 16.04 LTS, 15.04 LTS)
+- Linux Mint (18, 17.3, 17.2 & 17.1)
 - Debian (8.3.0)
 - OpenSUSE (Tumbleweed, 42.1, 13.2)
-- Fedora (23, 22)
+- Fedora (24, 23, 22)
 - Arch Linux
 
-A lot of people are willing to play Tiberian Sun and Red Alert 2 mods in OpenRA, no matter if they're at unfinished state or not. Personally, I feel the official OpenRA wiki may be really hard to understand for novice people who just want to play these titles and show little interest in cryptic compilation processes.
+May work. Expect missing dependencies (see NOTE 2 below):
 
-That's why, as not official support is not provided yet, I decided to do something about this TS/RA2 issue/dilemma: I made a bunch of scripts and instructions that should make life for an average user a bit easier and help installation of these two awesome titles (TS/RA2) on OpenRA.
+- Ubuntu (15.10, 14.10, 14.04 LTS)
 
-**NOTE:** As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable some day.
+Doesn't work. Missing dependencies (see NOTE 2 below):
 
-**NOTE 2:** As APT package manager updates have been dropped from some old Ubuntu based operating systems (such as 14.10), not all required packages to compile OpenRA may be available via internet anymore.
+- Linux Mint (16)
+- OpenSUSE (13.1)
+
+**NOTE 2:** As package manager updates have been dropped from some old Linux operating systems, not all required packages to compile OpenRA may be available via internet anymore. However, if you have dependencies already installed on your system, the game may compile as expected (unless these packages are too old?). Optionally, you may be able to get missing dependencies from internet sources but get ready to spend hours for solving dependency hell issues & possible corrupted database headache.
 
 **Installation instructions**
 --------------
@@ -28,7 +54,7 @@ That's why, as not official support is not provided yet, I decided to do somethi
 **Windows**
 
 1) Make sure you have .NET Framework 4.5 installed on your computer
-(Read *WINDOWS-BEFORE-INSTALLATION.txt* for further information)
+(Read *WINDOWS-BEFORE-INSTALLATION.txt* if needed)
 
 2) Double click *windows-install.bat*
 
@@ -44,14 +70,16 @@ bash linux-install.sh
 
 2) Follow the instructions
 
-**Post-installation instructions**
+**Tiberian Sun & Red Alert 2 - Post-installation instructions**
 --------------
 
-**To play Tiberian Sun**
+**Tiberian Sun**
+![alt text](https://i.ytimg.com/vi/R8U0kPfAWp8/default.jpg "Tiberian Sun")
 
 Launch the game and download the required asset files from the web when the game asks you to do so.
 
-**To play Red Alert 2**
+**Red Alert 2**
+![alt text](https://i.ytimg.com/vi/ENyxseq59YQ/default.jpg "Red Alert 2")
 
 You must install language.mix, multi.mix, ra2.mix and theme.mix into 
 
@@ -152,10 +180,58 @@ Usage: add new hotfix patch file into the /data/hotfixes/linux/ directory (Linux
 
 **Why are Windows & Linux separated (patches/hotfixes)?**
 
-The main reason for this is because Windows & Linux use different line endings in patch files. Different end of lines may make patch files incompatible in other OS so consider this more or less as a precaution.
+The main reason for this is because Windows & Linux use different line endings in patch files. Different end of lines may make patch files incompatible in various OSes so consider this more or less as a precaution.
 
 **How do I create new hotfixes?**
 
-You need a Unix tool 'diff' to create new hotfixes (patch files). For additional information, please see, for example, http://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/
+You need a Unix tool 'diff' to create new hotfixes (patch files). For additional information, please see, for example, 
+
+[Cyberciti.biz - Apply patch file using patch command](http://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/)
 
 Remember to check "end of line" (Windows or Unix) for every hotfix patch file you create.
+
+
+**FAQ**
+--------------
+![alt text](https://i.ytimg.com/vi/fnd0qg4I_MM/mqdefault.jpg "Mr. President, I'm afraid we have a heck of a situation down here...")
+
+Mr. President, I'm afraid we have a heck of a situation down here...
+*-General Ben Carville*
+
+**Missing support for my OS, please help!**
+
+Consider contributing the script development. It's not too hard if you have enough motivation and spare time. The question is, have you?
+
+The most requested OS support: Mac OS X (yes, yes and yes. I know it)
+
+Adding support for various Linux distributions: main differences between various linux distributions are 1) variety of dependency package names in repositories 2) and specific package manager commands.
+
+**You provide outdated/wrong information!**
+
+Please open a new issue on Github repository page:
+
+[Fincer/openra-tibsunra2 script - issues page](https://github.com/Fincer/openra-tibsunra2/issues "Script issues")
+
+**The script doesn't work! This sucks!**
+
+On script related errors, please open a new issue on Github repository page:
+
+[Fincer/openra-tibsunra2 script - issues page](https://github.com/Fincer/openra-tibsunra2/issues "Script issues")
+
+If you are 100% sure the failure you've encountered is not caused by the script but happens even if OpenRA is manually compiled, please open a new issue or look for an existing issue here:
+
+[OpenRA: main game - issues page](https://github.com/OpenRA/OpenRA/issues "OpenRA main game issues")
+
+or
+
+[Red Alert 2: OpenRA mod - issues page](https://github.com/OpenRA/ra2/issues "OpenRA RA2 mod issues")
+
+**NOTE 3:** If you don't open a new issue or decide to be silent, the error may never be fixed. Errors rarely get fixed by being passive or just hoping them to be suddenly fixed by a miracle. I may not even know the issue you have. You've been informed and warned.
+
+**I demand you to add or fix feature X! I surely won't do it but you will because I say so!**
+
+First at all, as this repository is open source in nature, no one gets paid $$$ by making a new script or improving the existing one. Thus you can hardly demand contributors to do something about any issues unless they have will to fix or create things for you. You can't force people to spend their spare time for your requests unless they themselves decide to do so. Money is a good motivator for people, but the concept of money doesn't exist here.
+
+Welcome to the world of open source software where things move forward slowly if at all. Sometimes the development stops even completely and codes get abandoned for eternity. The question is, do you have time or patience for this all?
+
+If you lose your patience and if you have motivation to improve things here, please consider contributing the script development. That's the most certain way you get the things done as you want, though you may need to learn a lot of new stuff yourself and get some headache as well.

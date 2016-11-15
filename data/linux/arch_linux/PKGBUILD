@@ -8,6 +8,7 @@ arch=("any")
 url="http://openra.net"
 license=("GPL3")
 depends=("mono" "ttf-dejavu" "openal" "libgl" "freetype2" "sdl2" "lua51" "hicolor-icon-theme" "desktop-file-utils" "xdg-utils")
+optdepends=('zenity')
 makedepends=("git")
 provides=("openra")
 conflicts=("openra-git" "openra")
@@ -39,7 +40,7 @@ build() {
 
     mkdir $srcdir/$pkgname-src/mods/ra2/bits/{vehicles,themes}
 
-# Get Red Alert 2 GIT version number
+# Get Red Alert 2 GIT version number for files
     ra2_version=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
     sed -i "s/Version: {DEV_VERSION}/Version: $ra2_version/g" $srcdir/$pkgname-src/mods/ra2/mod.yaml
     sed -i "s/maps\/ra2\/{DEV_VERSION}/maps\/ra2\/$ra2_version/g" $srcdir/$pkgname-src/mods/ra2/mod.yaml
@@ -54,4 +55,14 @@ package() {
     cd "$srcdir/$pkgname-src"
     make prefix=/usr DESTDIR="$pkgdir" install-all
     make prefix=/usr DESTDIR="$pkgdir" install-linux-shortcuts
+
+    rm $pkgdir/usr/lib/openra/mods/cnc/OpenRA.Mods.Cnc.dll.mdb
+    rm $pkgdir/usr/lib/openra/mods/common/OpenRA.Mods.Common.dll.mdb
+    rm $pkgdir/usr/lib/openra/mods/d2k/OpenRA.Mods.D2k.dll.mdb
+    rm $pkgdir/usr/lib/openra/mods/ra/OpenRA.Mods.RA.dll.mdb
+
+    rm $pkgdir/usr/lib/openra/mods/ra2/{build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
+    rm $pkgdir/usr/lib/openra/mods/ts/OpenRA.Mods.TS.dll.mdb
+    
+    rm $pkgdir/usr/lib/openra/{SharpFont.dll.config,SDL2-CS.dll.config,OpenAL-CS.dll.config,Eluant.dll.config}
 }

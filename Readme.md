@@ -27,7 +27,7 @@ Manual installation from source code suggested by the official OpenRA wiki is a 
 
 Sounds good? Yes. Works? Likely.
 
-P.S. FAQ about the script at the bottom of this page.
+P.S. FAQ about the script [at the bottom of this page](https://github.com/Fincer/openra-tibsunra2/#faq).
 
 **NOTE:** As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable or needless some day. For example, if RA2 gets merged into official OpenRA Github repository OR/AND disabling RA2/TS gameplay will be removed from OpenRA.
 
@@ -262,3 +262,68 @@ First at all, as this repository is open source in nature, no one gets paid $$$ 
 Welcome to the world of open source software where things move forward slowly if at all. Sometimes the development stops even completely and codes get abandoned for eternity. The question is, do you have time or patience for this all?
 
 If you lose your patience and if you have motivation to improve things here, please consider contributing the script development. That's the most certain way you get the things done as you want, though you may need to learn a lot of new stuff yourself and get some headache as well.
+
+**Is this an official Github site by OpenRA developers?**
+
+No, absolutely not. Don't even think it is. You won't get any official support for your OpenRA related issues here. 
+
+All official OpenRA Github pages are located at https://github.com/OpenRA/ + there are OpenRA Github fork pages by some OpenRA developers.
+
+**Tiberian Sun & Red Alert 2 gameplay is buggy as hell!**
+
+This is not anyone's fault. OpenRA, as the name suggests, is an open source project done by volunteers at their will. Especially, Tiberian Sun & Red Alert 2 titles in OpenRA are known to still miss critical features existing in the original Westwood games. For example, you shouldn't expect for playable TS/RA2 missions until these features have been implemented. And yes, it can take time - a lot of it.
+
+OpenRA is an ambitious project trying to bring all Westwood classic RTS's as modernized versions to PC platforms as free. The project demands time, improvising, tweaking the code and very well organized project management which has its priorities. Many issues are found in [OpenRA/OpenRA](https://github.com/OpenRA/OpenRA/issues) and [OpenRA/ra2](https://github.com/OpenRA/ra2/issues) Github repositories, but the question is, how many developers are there around to address these issues, especially when we're talking about an open source project? To ask why TS or RA2 are still in development, let me put it simple: less developers -> less workforce -> more prioritizing -> delays in schedule. This may not be the case in OpenRA but, generally speaking, it likely can be.
+
+If you feel you want and are able to speed up the development process of OpenRA or TS/RA2, please consider contacting OpenRA development team (read: I'm not the one you should contact) or contributing the OpenRA project otherwise. You can help the team with coding or adding gameplay features or anything that is important and is considered as important to the project by the OpenRA developers.
+
+The minimal effort you can help the OpenRA main project with is checking/fixing existing Github issues (see links above) or filling a new one in demand.
+
+**I have suggestions for OpenRA or TS/RA2. Where and whom should I address them to?**
+
+Depending on the game you're talking about, use OpenRA Github pages listed below.
+
+- For C&C Tiberian Dawn, Red Alert 1, Dune 2000 and Tiberian Sun, fill your request (issue) here:
+
+[Issues - OpenRA: main game](https://github.com/OpenRA/OpenRA/issues "OpenRA main game issues")
+
+- For Red Alert 2, fill your request (issue) here:
+
+[Issues - Red Alert 2: OpenRA mod](https://github.com/OpenRA/ra2/issues "OpenRA RA2 mod issues")
+
+Please use consideration when opening new issues, and don't forget to double check if your issue already exists there.
+
+**How's it going with Tiberian Sun development?**
+
+You can check the current development status, for example, [here](https://github.com/OpenRA/OpenRA/issues/7874 "Add TS features required for a full remake - OpenRA/OpenRA"). Take the page as a general reference, not as a sacred text.
+
+**Where is Yuri's Revenge support??**
+
+According to [GraionDilach](https://github.com/GraionDilach) (OpenRA developer), the Yuri's Revenge support in OpenRA has been discussed but no one hasn't started the development process yet. According to him, the Yuri's Revenge would be treated as a separate Github project, or as additional/extra title to OpenRA main project, just like RA2 now.
+
+*It has also been discussed IIRC that this repository will strictly go RA2 and whoever starts YR will do it in another repo. But YR itself isn't that hard, the TS and RA2 dependencies will be the problem.*
+
+Full comment [here](https://github.com/OpenRA/ra2/issues/309#issuecomment-257545830)
+
+If you feel you'd like to start the Yuri's Revenge project today, please feel free to do so. At least, the support for it will likely be added to this installation script.
+
+**Good OpenRA websites to check at**
+
+Project sites:
+- [OpenRA homepage](www.openra.net)
+- [OpenRA Github project page](https://github.com/OpenRA/OpenRA)
+- [OpenRA Red Alert 2 Github project page](https://github.com/OpenRA/ra2)
+
+Social media/Community sites:
+- [OpenRA Youtube channel](https://www.youtube.com/channel/UCRoiPL1J4K1-EhQeNazrYig)
+- [OpenRA Reddit site](https://www.reddit.com/r/openra/)
+- [OpenRA Facebook site](https://www.facebook.com/openra/)
+- [OpenRA Steam Community site](https://steamcommunity.com/groups/openra/)
+- [OpenRA - PPM Forums](http://www.ppmforums.com/index.php?f=929)
+- [OpenRA - Sleipnir's Stuff forums](http://www.sleipnirstuff.com/forum/viewforum.php?f=80)
+
+Other:
+- [OpenRA Resource Center](http://resource.openra.net/)
+- [OpenRA Mod Database (ModDB) site](http://www.moddb.com/games/openra)
+- [OpenRA Wiki page](https://github.com/OpenRA/OpenRA/wiki)
+- [OpenRA Red Alert 2 Wiki page](https://github.com/OpenRA/ra2/wiki)

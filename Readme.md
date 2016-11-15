@@ -222,13 +222,16 @@ Mr. President, I'm afraid we have a heck of a situation down here...
 
 Consider contributing the script development. It's not too hard if you have enough motivation and spare time. The question is, have you?
 
-- The most requested OS support: Mac OS X (yes, yes and yes. I know it)
+- Windows OSes: The script should work on Win 7/10. If it doesn't, consider filling a new issue [here](https://github.com/Fincer/openra-tibsunra2/issues).
+..*The script is based on: Powershell + Command Prompt + GNU Patch utility
 
-Nice to know when considering to add support for various Linux distributions: 
+- Mac OS X: The most requested OS support feature. Regardless of countless requests, the support is not available yet. The demand for Mac OS X script is a known issue.
+..*No additional information available
 
-Main differences between various linux distributions are 
-- variety of dependency package names in OS repositories
-- specific package manager commands
+- Linux OSes: The script should work on Linux OSes [listed above](https://github.com/Fincer/openra-tibsunra2/#operating-systems). If it doesn't, consider filling a new issue [here](https://github.com/Fincer/openra-tibsunra2/issues). If you consider adding support for a new Linux distribution, you likely want to know that main differences in the script between various linux distributions are as follows:
+..* variety of dependency package names in OS repositories
+..* specific package manager commands
+..*The script is based on: Bash + basic Linux commands (found on many distributions by default)
 
 **You provide outdated/wrong information here!**
 

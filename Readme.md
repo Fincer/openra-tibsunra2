@@ -1,4 +1,5 @@
 Welcoming you to Texas...
+
 Receiving thoughts...
 
 [![OpenRA/RA2](https://img.youtube.com/vi/QrL8m48TePY/mqdefault.jpg)](http://www.youtube.com/watch?v=QrL8m48TePY) [![OpenRA/RA2](https://img.youtube.com/vi/RgJyFMpCA7M/mqdefault.jpg)](http://www.youtube.com/watch?v=RgJyFMpCA7M)
@@ -26,7 +27,7 @@ OS specific script working status listed below.
 
 **Last update:** 15th November 2016
 
-Works. The following operating systems are currently supported:
+**Works.** The following operating systems are currently supported:
 
 - Windows 10
 - Windows 7
@@ -37,11 +38,11 @@ Works. The following operating systems are currently supported:
 - Fedora (24, 23, 22)
 - Arch Linux
 
-May work. Expect missing dependencies (see NOTE 2 below):
+**May work.** Expect missing dependencies (see NOTE 2 below):
 
 - Ubuntu (15.10, 14.10, 14.04 LTS)
 
-Doesn't work. Missing dependencies (see NOTE 2 below):
+**Doesn't work.** Missing dependencies (see NOTE 2 below):
 
 - Linux Mint (16)
 - OpenSUSE (13.1)
@@ -74,11 +75,13 @@ bash linux-install.sh
 --------------
 
 **Tiberian Sun**
+
 ![alt text](https://i.ytimg.com/vi/R8U0kPfAWp8/default.jpg "Tiberian Sun")
 
 Launch the game and download the required asset files from the web when the game asks you to do so.
 
 **Red Alert 2**
+
 ![alt text](https://i.ytimg.com/vi/ENyxseq59YQ/default.jpg "Red Alert 2")
 
 You must install language.mix, multi.mix, ra2.mix and theme.mix into 
@@ -186,7 +189,7 @@ The main reason for this is because Windows & Linux use different line endings i
 
 You need a Unix tool 'diff' to create new hotfixes (patch files). For additional information, please see, for example, 
 
-[Cyberciti.biz - Apply patch file using patch command](http://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/)
+[Apply patch file using patch command - Cyberciti.biz](http://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/)
 
 Remember to check "end of line" (Windows or Unix) for every hotfix patch file you create.
 
@@ -196,6 +199,7 @@ Remember to check "end of line" (Windows or Unix) for every hotfix patch file yo
 ![alt text](https://i.ytimg.com/vi/fnd0qg4I_MM/mqdefault.jpg "Mr. President, I'm afraid we have a heck of a situation down here...")
 
 Mr. President, I'm afraid we have a heck of a situation down here...
+
 *-General Ben Carville*
 
 **Missing support for my OS, please help!**
@@ -210,21 +214,21 @@ Adding support for various Linux distributions: main differences between various
 
 Please open a new issue on Github repository page:
 
-[Fincer/openra-tibsunra2 script - issues page](https://github.com/Fincer/openra-tibsunra2/issues "Script issues")
+[Issues - Fincer/openra-tibsunra2 script](https://github.com/Fincer/openra-tibsunra2/issues "Script issues")
 
 **The script doesn't work! This sucks!**
 
 On script related errors, please open a new issue on Github repository page:
 
-[Fincer/openra-tibsunra2 script - issues page](https://github.com/Fincer/openra-tibsunra2/issues "Script issues")
+[Issues - Fincer/openra-tibsunra2 script](https://github.com/Fincer/openra-tibsunra2/issues "Script issues")
 
 If you are 100% sure the failure you've encountered is not caused by the script but happens even if OpenRA is manually compiled, please open a new issue or look for an existing issue here:
 
-[OpenRA: main game - issues page](https://github.com/OpenRA/OpenRA/issues "OpenRA main game issues")
+[Issues - OpenRA: main game](https://github.com/OpenRA/OpenRA/issues "OpenRA main game issues")
 
 or
 
-[Red Alert 2: OpenRA mod - issues page](https://github.com/OpenRA/ra2/issues "OpenRA RA2 mod issues")
+[Issues - Red Alert 2: OpenRA mod](https://github.com/OpenRA/ra2/issues "OpenRA RA2 mod issues")
 
 **NOTE 3:** If you don't open a new issue or decide to be silent, the error may never be fixed. Errors rarely get fixed by being passive or just hoping them to be suddenly fixed by a miracle. I may not even know the issue you have. You've been informed and warned.
 

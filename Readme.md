@@ -210,17 +210,21 @@ Mr. President, I'm afraid we have a heck of a situation down here...
 
 Consider contributing the script development. It's not too hard if you have enough motivation and spare time. The question is, have you?
 
-The most requested OS support: Mac OS X (yes, yes and yes. I know it)
+- The most requested OS support: Mac OS X (yes, yes and yes. I know it)
 
-Adding support for various Linux distributions: main differences between various linux distributions are 1) variety of dependency package names in repositories 2) and specific package manager commands.
+Nice to know when considering to add support for various Linux distributions: 
 
-**You provide outdated/wrong information!**
+Main differences between various linux distributions are 
+- variety of dependency package names in OS repositories
+- specific package manager commands
+
+**You provide outdated/wrong information here!**
 
 Please open a new issue on Github repository page:
 
 [Issues - Fincer/openra-tibsunra2 script](https://github.com/Fincer/openra-tibsunra2/issues "Script issues")
 
-**The script doesn't work! This sucks!**
+**The script doesn't work! This sucks, you suck!**
 
 On script related errors, please open a new issue on Github repository page:
 

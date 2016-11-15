@@ -17,7 +17,7 @@ Just launch the script, follow instructions, take a cup of coffee or whatever an
 
 P.S. FAQ about the script at the bottom of this page.
 
-**NOTE:** As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable or needless some day. For example, if RA2 gets merged into official OpenRA Github repository OR/AND playing RA2/TS is not artificially prevented in OpenRA.
+**NOTE:** As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable or needless some day. For example, if RA2 gets merged into official OpenRA Github repository OR/AND disabling RA2/TS gameplay will be removed from OpenRA.
 
 **Operating Systems**
 --------------

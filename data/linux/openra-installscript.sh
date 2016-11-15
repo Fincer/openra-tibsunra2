@@ -7,11 +7,9 @@ trap "exit" INT
 ## VARIABLES USED IN THE SCRIPT
 #
 
-# Package name & version
+# Package name
+PACKAGE=openra-bleed-tibsunra2
 PACKAGE_NAME=openra-bleed-tibsunra2
-PACKAGE_VERSION=1
-
-PACKAGE=$PACKAGE_NAME-$PACKAGE_VERSION
 
 # Get our Linux distribution
 DISTRO=$(cat /etc/os-release | sed -n '/PRETTY_NAME/p' | grep -o '".*"' | sed -e 's/"//g' -e s/'([^)]*)'/''/g -e 's/ .*//' -e 's/[ \t]*$//')
@@ -77,9 +75,16 @@ line_in='\e[4m'
 dim_in='\e[2m'
 
 green_in='\e[32m'
+yellow_in='\e[33m'
 red_in='\e[91m'
 
 out='\e[0m'
+
+#Distribution related dependencies
+
+DEBIAN_DEPS=("git" "dpkg-dev" "dh-make" "mono-devel" "libfreetype6" "libopenal1" "libsdl2-2.0-0" "curl" "liblua5.1-0" "zenity" "xdg-utils" "build-essential" "gcc" "make" "libfile-fcntllock-perl")
+OPENSUSE_DEPS=("rpm-build" "git" "mono-devel" "libfreetype6" "libopenal1" "libSDL2-2_0-0" "curl" "lua51" "liblua5_1" "zenity" "xdg-utils" "gcc" "make")
+FEDORA_DEPS=("rpm-build" "git" "mono-devel" "freetype" "openal-soft" "SDL2" "libgdiplus-devel" "libcurl" "compat-lua" "zenity" "xdg-utils" "gcc" "make")
 
 #*********************************************************************************************************
 ## PRE-CHECK
@@ -132,11 +137,11 @@ echo -e "This script compiles and installs OpenRA from source with Tiberian Sun 
 - The script creates an installation package using OpenRA source code and additional Red Alert 2 mod files from Github.\n\nNOTE: As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable some day. Please, feel free to modify it if necessary."
 
 if [[ $DISTRO =~ $UBUNTU ]]; then
-	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nUbuntu 16.04 LTS$green_in\tOK$out\nUbuntu 15.10$green_in\t\tOK$out\nUbuntu 15.04 LTS$green_in\tOK$out\nUbuntu 14.10$green_in\t\tOK$out\nUbuntu 14.04 LTS$green_in\tOK$out\nLinux Mint 17.3$green_in\t\tOK$out\nLinux Mint 17.2$green_in\t\tOK$out\nLinux Mint 17.1$green_in\t\tOK$out\nLinux Mint 16$red_in\t\tFailure$out$dim_in (can't find required packages)$out\n"
+	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nUbuntu 16.10$green_in\tOK$out\nUbuntu 16.04 LTS$green_in\tOK$out\nUbuntu 15.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 15.04 LTS$green_in\tOK$out\nUbuntu 14.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 14.04 LTS$yellow_in\tOK (missing dependencies?)$out\nLinux Mint 18$green_in\t\tOK$out\nLinux Mint 17.3$green_in\t\tOK$out\nLinux Mint 17.2$green_in\t\tOK$out\nLinux Mint 17.1$yellow_in\t\tOK (missing dependencies?)$out\nLinux Mint 16$red_in\t\tFailure$out$dim_in (missing dependencies)$out\n"
 elif [[ $DISTRO =~ $DEBIAN ]]; then
 	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nDebian 8.3 $green_in\t\tOK$out\n"
 elif [[ $DISTRO =~ $OPENSUSE ]]; then
-	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nOpenSUSE Tumbleweed $green_in\tOK$out\nOpenSUSE Leap 42.1 $green_in\tOK$out\nOpenSUSE 13.2 $green_in\t\tOK$out\nOpenSUSE 13.1 $red_in\t\tFailure$out$dim_in (can't find required packages)$out\n"
+	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nOpenSUSE Tumbleweed $green_in\tOK$out\nOpenSUSE Leap 42.1 $green_in\tOK$out\nOpenSUSE 13.2 $green_in\t\tOK$out\nOpenSUSE 13.1 $red_in\t\tFailure$out$dim_in (missing dependencies)$out\n"
 elif [[ $DISTRO =~ $FEDORA ]]; then
 	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nFedora 23 $green_in\t\tOK$out\nFedora 22 $green_in\t\tOK$out\n"
 fi
@@ -160,8 +165,8 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		echo -e "Use custom hotfixes if added by the user (Default: No)?\nNOTE: If you choose YES (y), be aware that your OpenRA/RA2 version will likely not be compatible with the other players unless they've applied exactly same hotfixes in their game versions, too!"
 		echo -e "\nAvailable hotfixes are:\n"
 		echo -e $green_in$(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | sed -e 's/.*\///' -e 's/\.[^\.]*$//')$out
-		echo -e ""
-		read -r -p "Use these hotfixes? (y/N) " hotfixes
+		echo -e "\nMore information about hotfixes: https://github.com/Fincer/openra-tibsunra2/#about-patches--hotfixes\n"
+		read -r -p "Use these hotfixes? [y/N] " hotfixes
 
 		if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
 			echo -e "\nHotfixes applied. Continuing."
@@ -195,53 +200,89 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		fi
 	fi
 
+################################################
+##Sudo/Root check function for dependency packages installation process
+
+function sudocheck() {
 	if [ $SUDO_CHECK -eq 0 ]; then
 		if [[ -z $METHOD ]]; then
-			echo -e "\nOpenRA compilation requires that you install some packages first. Your permission for installation is asked (yes/no) everytime it's needed. This script asks for a required root password now, so you don't have to type it multiple times later on while the script is running.\n\nPlease type sudo/root password now.\n" 
+			echo -e "OpenRA compilation requires that you install some packages first. Your permission for installation is asked (yes/no) everytime it's needed. This script asks for a required root password now, so you don't have to type it multiple times later on while the script is running.\n\nPlease type sudo/root password now.\n" 
 		else
-			echo -e "\nOpenRA compilation requires that you install some packages first. This script asks for a required root password now, so you don't have to type it multiple times later on while the script is running.\n\nPlease type sudo/root password now.\n"
+			echo -e "OpenRA compilation requires that you install some packages first. This script asks for a required root password now, so you don't have to type it multiple times later on while the script is running.\n\nPlease type sudo/root password now.\n"
 		fi
 		sudo echo -e "\nRoot password OK."
 		sleep 1
 	else
 		true
 	fi
-	sleep 2
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------
+}
+
+################################################
+## PART 1/7
+#
+## Install missing OpenRA dependencies for compilation process if needed.
 
 	echo -e "$bold_in\n1/7 ***OpenRA build dependencies***\n$out"
 	sleep 2
+	
 	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
-		echo -e "Updating package lists with APT.\n"
-		sleep 2
-		sudo apt-get update || true
-	fi
-	echo -e "Installing required OpenRA build dependencies.\n"
-	sleep 4
-	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
-		sudo apt-get $METHOD install git dpkg-dev dh-make mono-devel libfreetype6 libopenal1 libsdl2-2.0-0 curl liblua5.1-0 zenity xdg-utils build-essential gcc make libfile-fcntllock-perl
-		mozroots --import --sync && \
-		sudo apt-key update || exit 1
-	elif [[ $DISTRO =~ $OPENSUSE ]]; then
-		if [[ ! $RELEASE = "openSUSE Leap 42.1" ]] || [[ ! $RELEASE = "openSUSE Tumbleweed" ]]; then
-			sudo zypper $METHOD install rpm-build git mono-devel libfreetype6 libopenal1 libSDL2-2_0-0 curl lua51 liblua5_1 zenity xdg-utils gcc make
+
+		if [[ ! $(dpkg-query -W -f='${Status}' "${DEBIAN_DEPS[@]}" | grep -c "not-installed") -eq 0 ]]; then #Find all dependency packages. If 'not-installed' string has match(es), then
+			echo -e "Some dependencies are missing.\n"
+			sudocheck
+
+			echo -e "Updating package lists with APT.\n"
+			sleep 2
+
+			sudo apt-get update || true
+			echo -e "Installing required OpenRA build dependencies."
+			sleep 4
+
+			sudo apt-get $METHOD install ${DEBIAN_DEPS[@]}
+			mozroots --import --sync && \
+			sudo apt-key update || exit 1
 		else
-			sudo zypper $METHOD install rpm-build git mono-devel libfreetype6 libopenal1 libSDL2-2_0-0 curl lua51 liblua5_1 zenity xdg-utils gcc make
+			echo -e "All dependencies are met. Continuing."
 		fi
-		mozroots --import --sync
+
+	elif [[ $DISTRO =~ $OPENSUSE ]]; then
+		if [[ ! $(zypper info "${OPENSUSE_DEPS[@]}" | grep -c "Installed: No") -eq 0 ]]; then #Find all dependency packages. If 'Installed: No' string has match(es), then
+			echo -e "Some dependencies are missing.\n"
+			sudocheck
+
+			if [[ ! $RELEASE = "openSUSE Leap 42.1" ]] || [[ ! $RELEASE = "openSUSE Tumbleweed" ]]; then
+				sudo zypper $METHOD install ${OPENSUSE_DEPS[@]}
+			else
+				sudo zypper $METHOD install ${OPENSUSE_DEPS[@]}
+			fi
+			mozroots --import --sync
+		else
+			echo -e "All dependencies are met. Continuing."
+		fi
+
 	elif [[ $DISTRO =~ $FEDORA ]]; then
-		sudo dnf $METHOD install rpm-build git mono-devel freetype openal-soft SDL2 libgdiplus-devel libcurl compat-lua zenity xdg-utils gcc make
-		cd /etc/yum.repos.d/
-		if [[ $RELEASE = "Fedora 23" ]]; then
-			sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_23/games:openra.repo
-			sudo dnf $METHOD --best --allowerasing install mono-core
-		elif [[ $RELEASE = "Fedora 22" ]]; then
-			sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_22/games:openra.repo
-			sudo dnf $METHOD --best --allowerasing install mono-core
+		if [[ ! $(dnf list installed "${FEDORA_DEPS[@]}" 2>&1 | grep -c "Error") -eq 0 ]]; then #Find all dependency packages. If "Error" string has match(es), then
+			echo -e "Some dependencies are missing.\n"
+			sudocheck
+
+			sudo dnf $METHOD install ${FEDORA_DEPS[@]}
+
+			cd /etc/yum.repos.d/
+
+			if [[ $RELEASE = "Fedora 23" ]]; then
+				sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_23/games:openra.repo
+				sudo dnf $METHOD --best --allowerasing install mono-core
+			elif [[ $RELEASE = "Fedora 22" ]]; then
+				sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_22/games:openra.repo
+				sudo dnf $METHOD --best --allowerasing install mono-core
+			fi
+			cd $WORKING_DIR
+			mozroots --import --sync
+		else
+			echo -e "All dependencies are met. Continuing."
 		fi
-		cd $WORKING_DIR
-		mozroots --import --sync
 	fi
+	sleep 2
 
 #*********************************************************************************************************
 ## PART 2/7
@@ -286,16 +327,26 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	sleep 2
 	for i in $HOME/openra-master/*.patch; do patch -d $HOME/openra-master/$PACKAGE -Np1 < $i; done
 
-# Get version number for Red Alert 2 mod (Github)
+# Get version number for Red Alert 2 mod files (Github)
 RA2_VERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 
 	sed -i "s/Version: {DEV_VERSION}/Version: $RA2_VERSION/g" $HOME/openra-master/$PACKAGE/mods/ra2/mod.yaml
 	sed -i "s/maps\/ra2\/{DEV_VERSION}/maps\/ra2\/$RA2_VERSION/g" $HOME/openra-master/$PACKAGE/mods/ra2/mod.yaml
 
+# Get OpenRA version number for package (Github)
+OPENRA_PKGVERSION=$(git ls-remote https://github.com/OpenRA/OpenRA.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
+RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
+
 #*********************************************************************************************************
 ## PART 4/7
 #
 ## Compile the game
+
+	##Change OpenRA version as it is in Github
+	mv $HOME/openra-master/$PACKAGE $HOME/openra-master/$PACKAGE-$OPENRA_PKGVERSION$RA2_PKGVERSION
+
+	##Change PACKAGE variabl
+	PACKAGE=$PACKAGE_NAME-$OPENRA_PKGVERSION$RA2_PKGVERSION
 
 	echo -e "$bold_in\n4/7 ***Starting OpenRA compilation with Tiberian Sun & Red Alert 2***$out"
 	sleep 2
@@ -304,6 +355,17 @@ RA2_VERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | se
 		make version && \
 		make dependencies && \
 		make all [DEBUG=false]
+
+		##Delete buildtime files:
+		rm $HOME/openra-master/$PACKAGE/mods/cnc/OpenRA.Mods.Cnc.dll.mdb
+		rm $HOME/openra-master/$PACKAGE/mods/common/OpenRA.Mods.Common.dll.mdb
+		rm $HOME/openra-master/$PACKAGE/mods/d2k/OpenRA.Mods.D2k.dll.mdb
+		rm $HOME/openra-master/$PACKAGE/mods/ra/OpenRA.Mods.RA.dll.mdb
+		rm $HOME/openra-master/$PACKAGE/mods/ra2/{.gitattributes,.gitignore,.travis.yml,build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
+		rm $HOME/openra-master/$PACKAGE/mods/ts/OpenRA.Mods.TS.dll.mdb
+		
+		# rm $HOME/openra-master/$PACKAGE/{SharpFont.dll.config,SDL2-CS.dll.config,OpenAL-CS.dll.config,Eluant.dll.config}
+		##Can't remove .config files at this moment due to deb packaging mechanism
 
 		echo -e "$bold_in\n5/7 ***Preparing OpenRA deb package. This takes a while. Please wait.***\n$out"
 		dh_make --createorig -s -y && \
@@ -326,10 +388,14 @@ RA2_VERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | se
 		mkdir -p $HOME/openra-master/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 		cp ./data/linux/opensuse/openra.spec $HOME/openra-master/rpmbuild/SPECS/
 		cp ./data/linux/opensuse/{GeoLite2-Country.mmdb.gz,thirdparty.tar.gz} $HOME/openra-master/rpmbuild/SOURCES/
+
+		##Change OpenRA + RA2 version as it is in Github
+		sed -i "s/Version:        1/Version:        $OPENRA_PKGVERSION$RA2_PKGVERSION/g" $HOME/openra-master/rpmbuild/SPECS/openra.spec
+
 		cd $HOME/openra-master
 		tar -czf $HOME/openra-master/rpmbuild/SOURCES/$PACKAGE.tar.gz ./$PACKAGE
 		cd $WORKING_DIR
-        
+
 		rpmbuild --define "_topdir $HOME/openra-master/rpmbuild" -bb --clean $HOME/openra-master/rpmbuild/SPECS/openra.spec
 
 		echo -e "$bold_in\n6/7 ***Compilation process completed. Moving compiled rpm package into '$HOME'***\n$out"

@@ -132,12 +132,12 @@ set -e
 ## Installation of OpenRA compilation dependencies and user notification message
 
 echo -e "\n$bold_in***Welcome Comrade*** $out\n" 
-echo -e "This script compiles and installs OpenRA from source with Tiberian Sun & Red Alert 2.\n
+echo -e "This script compiles and installs OpenRA from source with Tiberian Sun & Red Alert 2. Optionally Dune 2 can be installed, too.\n
 - The script is NOT made by the developers of OpenRA and may contain bugs.
-- The script creates an installation package using OpenRA source code and additional Red Alert 2 mod files from Github.\n\nNOTE: As the development of OpenRA & Red Alert 2 continues, this script will likely become unusable some day. Please, feel free to modify it if necessary."
+- The script creates an installation package using OpenRA source code and additional Red Alert 2 (and optionally Dune 2) mod files from Github.\n\nNOTE: As the development of OpenRA & Red Alert 2 (& Dune 2) continues, this script will likely become unusable some day. Please, feel free to modify it if necessary."
 
 if [[ $DISTRO =~ $UBUNTU ]]; then
-	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nUbuntu 16.10$green_in\tOK$out\nUbuntu 16.04 LTS$green_in\tOK$out\nUbuntu 15.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 15.04 LTS$green_in\tOK$out\nUbuntu 14.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 14.04 LTS$yellow_in\tOK (missing dependencies?)$out\nLinux Mint 18$green_in\t\tOK$out\nLinux Mint 17.3$green_in\t\tOK$out\nLinux Mint 17.2$green_in\t\tOK$out\nLinux Mint 17.1$yellow_in\t\tOK (missing dependencies?)$out\nLinux Mint 16$red_in\t\tFailure$out$dim_in (missing dependencies)$out\n"
+	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nUbuntu 16.10$green_in\t\tOK$out\nUbuntu 16.04 LTS$green_in\tOK$out\nUbuntu 15.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 15.04 LTS$green_in\tOK$out\nUbuntu 14.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 14.04 LTS$yellow_in\tOK (missing dependencies?)$out\nLinux Mint 18$green_in\t\tOK$out\nLinux Mint 17.3$green_in\t\tOK$out\nLinux Mint 17.2$green_in\t\tOK$out\nLinux Mint 17.1$yellow_in\t\tOK (missing dependencies?)$out\nLinux Mint 16$red_in\t\tFailure$out$dim_in (missing dependencies)$out\n"
 elif [[ $DISTRO =~ $DEBIAN ]]; then
 	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nDebian 8.3 $green_in\t\tOK$out\n"
 elif [[ $DISTRO =~ $OPENSUSE ]]; then
@@ -159,6 +159,9 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	fi
 	read -r -p "Please type 1 or 2 (Default: 2): " number
 	sleep 1
+
+	echo -e "\nDune 2 -- Question\n"
+	read -r -p "Additionally, Dune 2 can be installed, too. Do you want to install it? [y/N] (Default: y) " dune2_install
 
 	if [[ ! $(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | wc -l) -eq 0 ]]; then
 		echo -e "\nHotfixes -- Question\n"
@@ -199,6 +202,13 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 			echo -e "Use hotfixes:$bold_in No$out"
 		fi
 	fi
+
+	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+		echo -e "Install Dune 2:$bold_in Yes$out"
+	else
+		echo -e "Install Dune 2:$bold_in No$out"
+	fi
+	sleep 3
 
 ################################################
 ##Sudo/Root check function for dependency packages installation process
@@ -285,13 +295,17 @@ function sudocheck() {
 	sleep 2
 
 #*********************************************************************************************************
-## PART 2/7
+## PART 2/7 - 1
 #
 ## Download the latest OpenRA & Red Alert 2 source files from Github, create build directories to the user's home directory. 
 ## Once Red Alert 2 source files have been downloaded, move them to the OpenRA parent source directory. 
 ## Add several missing directories for Red Alert 2.
 
+	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	echo -e "$bold_in\n2/7 ***Downloading OpenRA source code & Red Alert 2 + Dune 2 mod files from Github***\n$out"
+	else
 	echo -e "$bold_in\n2/7 ***Downloading OpenRA source code & Red Alert 2 mod files from Github***\n$out"
+	fi
 	sleep 2
 	echo -e "Part 1 (OpenRA source code):\n"
 
@@ -312,7 +326,32 @@ function sudocheck() {
 		mkdir "$RA2_MISSINGDIR2"
 	fi
 
-	cp ./data/patches/linux/*.patch $HOME/openra-master/
+#*********************************************************************************************************
+## OPTIONAL: PART 2/7 - 2
+#
+## Download the latest Dune 2 mod files from Github
+## Once Dune 2 source files have been downloaded, move them to the OpenRA parent source directory.
+
+	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+		echo -e "\nPart 3 (Dune 2 mod files):\n"
+
+		git clone -b master https://github.com/OpenRA/d2.git $HOME/openra-master/d2 && \
+		mv $HOME/openra-master/d2/OpenRA.Mods.D2 $HOME/openra-master/$PACKAGE && \
+		mv $HOME/openra-master/d2 $HOME/openra-master/$PACKAGE/mods/
+	fi
+
+#*********************************************************************************************************
+## Apply patches & hotfixes
+
+	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+		#Copy all patch files excluding the one which modifies 'mods' string in the Linux Makefile (double patching it will cause conflicts between D2 and RA2)
+		cp ./data/patches/linux/*.patch $HOME/openra-master/
+		rm $HOME/openra-master/linux-ra2-make-modstrings.patch
+	else
+		#Copy all patch files excluding the ones for Dune 2.
+		cp ./data/patches/linux/*.patch $HOME/openra-master/
+		rm $HOME/openra-master/linux-d2*.patch
+	fi
 
 	if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		cp ./data/hotfixes/linux/*.patch $HOME/openra-master/
@@ -323,7 +362,11 @@ function sudocheck() {
 #
 ## Patch several OpenRA source files (Makefile and such) for Tiberian Sun & Red Alert 2
 
-	echo -e "$bold_in\n3/7 ***Preparing OpenRA source files for Tiberian Sun & Red Alert 2***\n$out"
+	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+		echo -e "$bold_in\n3/7 ***Preparing OpenRA source files for Dune 2, Tiberian Sun & Red Alert 2***\n$out"
+	else
+		echo -e "$bold_in\n3/7 ***Preparing OpenRA source files for Tiberian Sun & Red Alert 2***\n$out"
+	fi
 	sleep 2
 	for i in $HOME/openra-master/*.patch; do patch -d $HOME/openra-master/$PACKAGE -Np1 < $i; done
 
@@ -337,18 +380,40 @@ RA2_VERSION=git-$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | se
 OPENRA_PKGVERSION=$(git ls-remote https://github.com/OpenRA/OpenRA.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 
+# Get version number for Dune 2 mod files if the mod is about to be installed (Github)
+	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+
+		D2_VERSION=git-$(git ls-remote https://github.com/OpenRA/d2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
+
+			sed -i "s/Version: {DEV_VERSION}/Version: $D2_VERSION/g" $HOME/openra-master/$PACKAGE/mods/d2/mod.yaml
+			sed -i "s/maps\/ra2\/{DEV_VERSION}/maps\/ra2\/$D2_VERSION/g" $HOME/openra-master/$PACKAGE/mods/d2/mod.yaml
+
+		D2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/d2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
+	fi
+
 #*********************************************************************************************************
 ## PART 4/7
 #
 ## Compile the game
 
-	##Change OpenRA version as it is in Github
-	mv $HOME/openra-master/$PACKAGE $HOME/openra-master/$PACKAGE-$OPENRA_PKGVERSION$RA2_PKGVERSION
+##Change OpenRA version as it is in Github & change PACKAGE variable after that
+	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+		mv $HOME/openra-master/$PACKAGE $HOME/openra-master/$PACKAGE-$OPENRA_PKGVERSION$RA2_PKGVERSION$D2_PKGVERSION
 
-	##Change PACKAGE variabl
-	PACKAGE=$PACKAGE_NAME-$OPENRA_PKGVERSION$RA2_PKGVERSION
+		PACKAGE=$PACKAGE-$OPENRA_PKGVERSION$RA2_PKGVERSION$D2_PKGVERSION
+	else
+		mv $HOME/openra-master/$PACKAGE $HOME/openra-master/$PACKAGE-$OPENRA_PKGVERSION$RA2_PKGVERSION
 
-	echo -e "$bold_in\n4/7 ***Starting OpenRA compilation with Tiberian Sun & Red Alert 2***$out"
+		PACKAGE=$PACKAGE_NAME-$OPENRA_PKGVERSION$RA2_PKGVERSION
+	fi
+
+	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+		echo -e "$bold_in\n4/7 ***Starting OpenRA compilation with Dune 2, Tiberian Sun & Red Alert 2***
+		$out"
+	else
+		echo -e "$bold_in\n4/7 ***Starting OpenRA compilation with Tiberian Sun & Red Alert 2***$out"
+	fi
+	
 	sleep 2
 	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
 		cd $HOME/openra-master/$PACKAGE && \
@@ -363,9 +428,13 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		rm $HOME/openra-master/$PACKAGE/mods/ra/OpenRA.Mods.RA.dll.mdb
 		rm $HOME/openra-master/$PACKAGE/mods/ra2/{.gitattributes,.gitignore,.travis.yml,build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
 		rm $HOME/openra-master/$PACKAGE/mods/ts/OpenRA.Mods.TS.dll.mdb
-		
+
+		if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+			rm $HOME/openra-master/$PACKAGE/mods/d2/OpenRA.Mods.D2.dll.mdb
+		fi
+
 		# rm $HOME/openra-master/$PACKAGE/{SharpFont.dll.config,SDL2-CS.dll.config,OpenAL-CS.dll.config,Eluant.dll.config}
-		##Can't remove .config files at this moment due to deb packaging mechanism
+		##Can't remove .config files at this moment due to deb packaging mechanism!
 
 		echo -e "$bold_in\n5/7 ***Preparing OpenRA deb package. This takes a while. Please wait.***\n$out"
 		dh_make --createorig -s -y && \
@@ -389,8 +458,12 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		cp ./data/linux/opensuse/openra.spec $HOME/openra-master/rpmbuild/SPECS/
 		cp ./data/linux/opensuse/{GeoLite2-Country.mmdb.gz,thirdparty.tar.gz} $HOME/openra-master/rpmbuild/SOURCES/
 
-		##Change OpenRA + RA2 version as it is in Github
-		sed -i "s/Version:        1/Version:        $OPENRA_PKGVERSION$RA2_PKGVERSION/g" $HOME/openra-master/rpmbuild/SPECS/openra.spec
+		##Change OpenRA + RA2 (& Dune 2) version as it is in Github
+		if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+			sed -i "s/Version:        1/Version:        $OPENRA_PKGVERSION$RA2_PKGVERSION$D2_PKGVERSION/g" $HOME/openra-master/rpmbuild/SPECS/openra.spec
+		else
+			sed -i "s/Version:        1/Version:        $OPENRA_PKGVERSION$RA2_PKGVERSION/g" $HOME/openra-master/rpmbuild/SPECS/openra.spec
+		fi
 
 		cd $HOME/openra-master
 		tar -czf $HOME/openra-master/rpmbuild/SOURCES/$PACKAGE.tar.gz ./$PACKAGE

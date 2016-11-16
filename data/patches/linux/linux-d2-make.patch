@@ -1,0 +1,47 @@
+--- a/Makefile
++++ b/Makefile
+@@ -173,6 +173,15 @@
+ PROGRAMS += mod_d2k
+ mod_d2k: $(mod_d2k_TARGET)
+ 
++# Dune 2
++mod_d2_SRCS := $(shell find OpenRA.Mods.D2/ -iname '*.cs')
++mod_d2_TARGET = mods/d2/OpenRA.Mods.D2.dll
++mod_d2_KIND = library
++mod_d2_DEPS = $(STD_MOD_DEPS) $(mod_common_TARGET)
++mod_d2_LIBS = $(COMMON_LIBS) $(STD_MOD_LIBS) $(mod_common_TARGET)
++PROGRAMS += mod_d2
++mod_d2: $(mod_d2_TARGET)
++
+ # Tiberian Sun
+ mod_ts_SRCS := $(shell find OpenRA.Mods.TS/ -iname '*.cs')
+ mod_ts_TARGET = mods/ts/OpenRA.Mods.TS.dll
+@@ -214,6 +223,9 @@
+ 	@echo "Checking for code style violations in OpenRA.Mods.D2k..."
+ 	@mono --debug OpenRA.Utility.exe ra --check-code-style OpenRA.Mods.D2k
+ 	@echo
++	@echo "Checking for code style violations in OpenRA.Mods.D2..."
++	@mono --debug OpenRA.Utility.exe ra --check-code-style OpenRA.Mods.D2
++	@echo
+ 	@echo "Checking for code style violations in OpenRA.Mods.TS..."
+ 	@mono --debug OpenRA.Utility.exe ra --check-code-style OpenRA.Mods.TS
+ 	@echo
+@@ -247,6 +259,9 @@
+ 
+ test: utility mods
+ 	@echo
++	@echo "Testing Dune 2 mod MiniYAML..."
++	@mono --debug OpenRA.Utility.exe d2 --check-yaml
++	@echo
+ 	@echo "Testing Tiberian Sun mod MiniYAML..."
+ 	@mono --debug OpenRA.Utility.exe ts --check-yaml
+ 	@echo
+@@ -391,6 +406,8 @@
+ 	@$(INSTALL_PROGRAM) $(mod_cnc_TARGET) "$(DATA_INSTALL_DIR)/mods/cnc"
+ 	@$(CP_R) mods/ra "$(DATA_INSTALL_DIR)/mods/"
+ 	@$(INSTALL_PROGRAM) $(mod_ra_TARGET) "$(DATA_INSTALL_DIR)/mods/ra"
++	@$(CP_R) mods/d2 "$(DATA_INSTALL_DIR)/mods/"
++	@$(INSTALL_PROGRAM) $(mod_d2_TARGET) "$(DATA_INSTALL_DIR)/mods/d2"
+ 	@$(CP_R) mods/d2k "$(DATA_INSTALL_DIR)/mods/"
+ 	@$(INSTALL_PROGRAM) $(mod_d2k_TARGET) "$(DATA_INSTALL_DIR)/mods/d2k"
+ 	@$(CP_R) mods/modchooser "$(DATA_INSTALL_DIR)/mods/"

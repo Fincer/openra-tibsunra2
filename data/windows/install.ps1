@@ -50,14 +50,24 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	$hotfixes = Read-Host "Use these hotfixes? (y/N)"
 
 	if ($hotfixes -eq "y") {
-	"`nHotfixes applied. Continuing."
+		"`nHotfixes applied. Continuing."
 	} else {
-	"`nHotfixes ignored and skipped. Continuing."
+		"`nHotfixes ignored and skipped. Continuing."
 	}
 
 }Else{
 	"`nAvailable hotfixes: None"
 }
+	"`n- Dune 2 -- Question`n"
+
+	$dune2_install = Read-Host "Additionally, Dune 2 can be installed, too. Do you want to install it? [y/N] (Default: y)"
+
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		"`nInstall Dune 2: Yes"
+	} else {
+		"`nInstall Dune 2: No"
+	}
+
 	Start-Sleep -s 2
 
 #------------------------------------------------------
@@ -67,9 +77,11 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 
 	Remove-Item .\data\windows\OpenRA-bleed -Force -Recurse -ErrorAction SilentlyContinue
 	Remove-Item .\data\windows\ra2-master -Force -Recurse -ErrorAction SilentlyContinue
+	Remove-Item .\data\windows\d2-master -Force -Recurse -ErrorAction SilentlyContinue
 
 	Remove-Item .\data\windows\OpenRA-bleed.zip -Force -ErrorAction SilentlyContinue
 	Remove-Item .\data\windows\ra2-master.zip -Force -ErrorAction SilentlyContinue
+	Remove-Item .\data\windows\d2-master.zip -Force -ErrorAction SilentlyContinue
 
 	Remove-Item .\data\windows\*.html -Force -ErrorAction SilentlyContinue
 	Remove-Item .\data\windows\*.txt -Force -ErrorAction SilentlyContinue
@@ -98,6 +110,14 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	$client.DownloadFile("https://github.com/OpenRA/ra2/archive/master.zip?ref=master",".\data\windows\ra2-master.zip")
 
 #------------------------------------------------------
+## Download Dune 2 mod files
+
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		"`nDownloading Dune 2 mod files from Github. Please Stand By."
+		$client.DownloadFile("https://github.com/OpenRA/d2/archive/master.zip?ref=master",".\data\windows\d2-master.zip")
+	}
+
+#------------------------------------------------------
 ## Unzip OpenRA-bleed source files
 
 	"`nUnzipping OpenRA source files into \data\windows folder."
@@ -118,17 +138,43 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	$destination.Copyhere($zip_file2.items())
 
 #------------------------------------------------------
-## Merge OpenRA source files and Red Alert 2 mod files together
+## Unzip Dune 2 mod files
 
-	"`nMerging OpenRA source & Red Alert 2 mod files."
-	Copy-Item -Recurse ".\data\windows\ra2-master\OpenRA.Mods.RA2" ".\data\windows\OpenRA-bleed\OpenRA.Mods.RA2"
-	Copy-Item -Recurse ".\data\windows\ra2-master" ".\data\windows\OpenRA-bleed\mods\ra2"
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		"`nUnzipping Dune 2 mod files into \data\windows folder."
+		$shell_app=new-object -com shell.application
+		$filename3 = "d2-master.zip"
+		$zip_file3 = $shell_app.namespace((Get-Location).Path + "\data\windows" + "\$filename3")
+		$destination = $shell_app.namespace((Get-Location).Path + "\data\windows")
+		$destination.Copyhere($zip_file3.items())
+	}
+
+#------------------------------------------------------
+## Merge OpenRA source files and Red Alert 2 (& Dune 2) mod files together
+
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+
+		"`nMerging OpenRA source & Red Alert 2 + Dune 2 mod files."
+		Copy-Item -Recurse ".\data\windows\d2-master\OpenRA.Mods.D2" ".\data\windows\OpenRA-bleed\OpenRA.Mods.D2"
+		Copy-Item -Recurse ".\data\windows\d2-master" ".\data\windows\OpenRA-bleed\mods\d2"
+		Copy-Item -Recurse ".\data\windows\ra2-master\OpenRA.Mods.RA2" ".\data\windows\OpenRA-bleed\OpenRA.Mods.RA2"
+		Copy-Item -Recurse ".\data\windows\ra2-master" ".\data\windows\OpenRA-bleed\mods\ra2"
+	} else {
+		"`nMerging OpenRA source & Red Alert 2 mod files."
+		Copy-Item -Recurse ".\data\windows\ra2-master\OpenRA.Mods.RA2" ".\data\windows\OpenRA-bleed\OpenRA.Mods.RA2"
+		Copy-Item -Recurse ".\data\windows\ra2-master" ".\data\windows\OpenRA-bleed\mods\ra2"
+	}
+
 	Remove-Item -Recurse .\data\windows\ra2-master\*
 
 #------------------------------------------------------
 ## Get OpenRA Git version number
 
-	"`nRetrieving OpenRA & Red Alert 2 Git version numbers."
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		"`nRetrieving OpenRA & Red Alert 2 + Dune 2 Git version numbers."
+	} else {
+		"`nRetrieving OpenRA & Red Alert 2 Git version numbers."
+	}
 
 	$web = New-Object System.Net.WebClient
 	$web.DownloadFile("https://github.com/OpenRA/OpenRA",".\data\windows\openra-github.html")
@@ -180,16 +226,69 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	$ra2_folderversion = [IO.File]::ReadAllText(".\data\windows\ra2-latestcommit.txt").trim("`r`ngit")
 
 #------------------------------------------------------
-## Prepare OpenRA source code for Tiberian Sun & Red Alert 2
+## Get Dune 2 Git version number
 
-	Copy-Item ".\data\patches\windows\*.patch" ".\data\windows"
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
 
-	if ($hotfixes -eq "y") {
-	Copy-Item ".\data\hotfixes\windows\*.patch" ".\data\windows"
+		$web = New-Object System.Net.WebClient
+		$web.DownloadFile("https://github.com/OpenRA/d2",".\data\windows\d2-github.html")
+
+		$flag=0
+		Get-Content .\data\windows\d2-github.html |
+		foreach {
+		Switch -Wildcard ($_){
+		"*Latest commit*" {$flag=1}
+		"*time datetime*" {$flag=0}
+		}
+		if ($flag -eq 1){
+		Out-File .\data\windows\d2-html-stripped.txt -InputObject $_ -Append
+		}
+		}
+
+		(Get-Content .\data\windows\d2-html-stripped.txt)[2] -replace '\s','' | Foreach-Object{ 'git-' + $_ } > .\data\windows\d2-latestcommit.txt
+
+		$d2_gitversion = [IO.File]::ReadAllText(".\data\windows\d2-latestcommit.txt").trim("`r`n")
+		Write-Output "Dune 2 version: $d2_gitversion"
+
+	#This is used in folder name
+		$d2_folderversion = [IO.File]::ReadAllText(".\data\windows\d2-latestcommit.txt").trim("`r`ngit")
 	}
 
+#------------------------------------------------------
+## Prepare OpenRA source code for Tiberian Sun & Red Alert 2 (& Dune 2)
+
+	#Add patches & hotfixes
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+
+		Copy-Item ".\data\patches\windows\*.patch" ".\data\windows"
+
+		if ($hotfixes -eq "y") {
+		Copy-Item ".\data\hotfixes\windows\*.patch" ".\data\windows"
+		}
+
+		#This file will conflict with windows-d2-make-modstrings.patch
+		Remove-Item .\data\windows\windows-ra2-make-modstrings.patch -Force -ErrorAction SilentlyContinue
+
+	} else {
+
+		Copy-Item ".\data\patches\windows\*.patch" ".\data\windows"
+
+		if ($hotfixes -eq "y") {
+		Copy-Item ".\data\hotfixes\windows\*.patch" ".\data\windows"
+		}
+
+		#Remove Dune 2 patches
+		Remove-Item .\data\windows\windows-d2*.patch -Force -ErrorAction SilentlyContinue
+	}
 	Start-Sleep -s 3
-	"`nPatching OpenRA source code for Tiberian Sun & Red Alert 2."
+
+	#Start patching operation
+
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		"`nPatching OpenRA source code for Tiberian Sun & Red Alert 2 + Dune 2."
+	} else {
+		"`nPatching OpenRA source code for Tiberian Sun & Red Alert 2."
+	}
 
 	cd .\data\windows
 
@@ -203,6 +302,7 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 
 	cd ..
 	cd ..
+
 	
 #------------------------------------------------------
 ## Push version numbers to mod files
@@ -228,6 +328,11 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 # All
 	(Get-Content .\data\windows\Openra-bleed\mods\all\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\windows\Openra-bleed\mods\all\mod.yaml
 
+#Dune 2
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		(Get-Content .\data\windows\Openra-bleed\mods\d2\mod.yaml) -replace '{DEV_VERSION}',$d2_gitversion | Set-Content .\data\windows\Openra-bleed\mods\d2\mod.yaml
+	}
+
 #------------------------------------------------------
 ## Remove temporary files
 
@@ -239,7 +344,12 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 #------------------------------------------------------
 ## Compile OpenRA with Tiberian Sun & Red Alert 2
 
-	"`nCompiling OpenRA with Tiberian Sun & Red Alert 2.`n"
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		"`nCompiling OpenRA with Tiberian Sun & Red Alert 2 + Dune 2.`n"
+	} else {
+		"`nCompiling OpenRA with Tiberian Sun & Red Alert 2.`n"
+	}
+
 	cd .\data\windows\OpenRA-bleed\
 	.\make.cmd dependencies
 	.\make.cmd all
@@ -262,6 +372,10 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Game
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\packaging
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\thirdparty
+
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.D2
+	}
 
 	Remove-Item .\data\windows\OpenRA-bleed\.editorconfig
 	Remove-Item .\data\windows\OpenRA-bleed\.gitattributes
@@ -313,7 +427,12 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\fetch-content.sh
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\mods\ra2\OpenRA.Mods.RA2
 
-	Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion"
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion-d2$d2_folderversion"
+	} else {
+		Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion"
+	}
+
 	Remove-Item .\data\windows\OpenRA-bleed\* -Recurse
 	Remove-Item .\data\windows\OpenRA-bleed
 	Remove-Item .\data\windows\ra2-master
@@ -321,15 +440,26 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 #------------------------------------------------------
 ## Post-installation messages
 
-	"`nCompilation process completed. You find the game inside 'OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion' folder"
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		"`nCompilation process completed. You find the game inside 'OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion-d2$d2_folderversion' folder"
+	} else {
+		"`nCompilation process completed. You find the game inside 'OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion' folder"
+	}
+
 	Start-Sleep -s 4
 	"`nTO PLAY OPENRA: Click OpenRA.exe (maybe you should create a desktop shortcut for it?)"
 	"`nTO PLAY TIBERIAN SUN: Launch the game and download the required asset files from the web when the game asks you to do so."
 	"`nTO PLAY RED ALERT 2: you must install language.mix, multi.mix, ra2.mix and theme.mix into \My Documents\OpenRA\Content\ra2\ folder.`nYou find these files from original RA2 installation media (CD's):`n`ntheme.mix, multi.mix = RA2 CD Root folder`nra2.mix, language.mix = RA2 CD Root\INSTALL\Game1.CAB (inside that archive file)"
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		"`nTO PLAY DUNE 2: Please see https://github.com/Fincer/openra-tibsunra2/ front page for further instructions."
+	}
 	"`nMULTIPLAYER: It's recommended to build OpenRA using exactly same GIT source files for multiplayer usage to minimize possible version differences/conflicts between players. Please make sure all players have exactly same git versions of their in-game mods (RA, CNC, D2K, TS, RA2). Version numbers are formatted like 'git-e0d7445' etc. and can be found in each mod description in the mod selection menu."
 	"`nFor this compilation, the version numbers are as follows:"
 	Write-Output "OpenRA version: $openra_gitversion"
 	Write-Output "RA2 version: $ra2_gitversion"
+	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		Write-Output "Dune 2 version: $d2_gitversion"
+	}
 	"`nUNINSTALLATION: Since the game has been compiled from source and no additional setup programs are provided, all you need to do is to delete the contents of 'OpenRA-bleed-tibsunra2' folder and \My Documents\OpenRA\"
 	"`nHave fun!"
 	exit

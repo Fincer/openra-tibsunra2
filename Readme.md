@@ -9,7 +9,7 @@ Introduction
 
 **What is this all about?**
 
-This Github repository provides a bunch of scripts for installing Tiberian Sun & RA2 on [OpenRA](http://www.openra.net/ "OpenRA homepage"), an open source implementation of classic Westwood RTS games.
+This Github repository provides a bunch of scripts for installing Tiberian Sun & RA2 on [OpenRA](http://www.openra.net/ "OpenRA homepage"), an open source implementation of classic Westwood RTS games. Additionally, you can install Dune 2, too.
 
 Tiberian Sun & Red Alert 2 are still officially "unfinished titles" in OpenRA, and thus not yet provided by official OpenRA sites as an easy download option. Their current gameplay status is considered as "pre-alpha", "not ready" or "only accessible to OpenRA developers".
 
@@ -44,22 +44,23 @@ OS specific script working status listed below.
 - Windows 10
 - Windows 7
 - Ubuntu (16.10, 16.04 LTS, 15.04 LTS)
-- Linux Mint (18, 17.3, 17.2 & 17.1)
+- Linux Mint (18, 17.3, 17.2)
 - Debian (8.3.0)
 - OpenSUSE (Tumbleweed, 42.1, 13.2)
 - Fedora (24, 23, 22)
 - Arch Linux
 
-**May work.** Expect missing dependencies (see NOTE 2 below):
+**May work.** Expect missing dependencies (see NOTE below):
 
 - Ubuntu (15.10, 14.10, 14.04 LTS)
+- Linux Mint (17.1)
 
-**Doesn't work.** Missing dependencies (see NOTE 2 below):
+**Doesn't work.** Missing dependencies (see NOTE below):
 
 - Linux Mint (16)
 - OpenSUSE (13.1)
 
-**NOTE 2:** As package manager updates have been dropped from some old Linux operating systems, not all required packages to compile OpenRA may be available via internet anymore. However, if you have dependencies already installed on your system, the game may compile as expected (unless these packages are too old?). Optionally, you may be able to get missing dependencies from internet sources but get ready to spend hours for solving dependency hell issues & possible corrupted database headache.
+**NOTE:** As package manager updates have been dropped from some old Linux operating systems, not all required packages to compile OpenRA may be available via internet anymore. However, if you have dependencies already installed on your system, the game may compile as expected (unless these packages are too old?). Optionally, you may be able to get missing dependencies from internet sources but get ready to spend hours for solving dependency hell issues & possible corrupted database headache.
 
 **Installation instructions**
 --------------
@@ -111,9 +112,54 @@ You find these files from original RA2 installation media (CD's):
 - theme.mix, multi.mix = RA2 CD Root folder
 - ra2.mix, language.mix = RA2 CD Root/INSTALL/Game1.CAB (inside that archive file)
 
+**OPTIONAL: Dune 2 - Post-installation instructions**
+--------------
+
+**NOTE:** Dune 2 must have been selected during the installation process in order to play it!
+
+![alt text](https://img.youtube.com/vi/tppjzT-su0Q/default.jpg "Dune 2")
+
+1) Launch the game
+2) Select D2k
+3) Click "Manage Content"
+4) Click "Download" (in the "Base Game Files" row)
+5) Click Back
+6) Close the game
+
+7) Get the following files from D2k
+- DUNE.PAK
+- VOC.PAK
+- ATRE.PAK
+- HARK.PAK
+- ORDOS.PAK
+- INTRO.PAK
+- FINALE.PAK
+
+OS specific folder paths:
+
+```
+\My Documents\OpenRA\Content\d2k\ (Windows)
+```
+
+```
+.openra/Content/d2k/ (linux)
+```
+
+8) Put the files into
+
+```
+\My Documents\OpenRA\Content\d2\ (Windows)
+```
+
+```
+.openra/Content/d2/ (linux)
+```
+
+9) Re-launch the game, select Dune 2 and click "Play"
+
 **Multiplayer**
 
-It's recommended to build OpenRA using exactly same GIT source files for multiplayer usage to minimize possible version differences/conflicts between players. Please make sure all players have exactly same git versions of their in-game mods (RA, CNC, D2K, TS, RA2). Version numbers are formatted like 'git-e0d7445' etc. and can be found in each mod description in the mod selection menu.
+It's recommended to build OpenRA using exactly same GIT source files for multiplayer usage to minimize possible version differences/conflicts between players. Please make sure all players have exactly same git versions of their in-game mods (RA, CNC, D2, D2K, TS, RA2). Version numbers are formatted like 'git-e0d7445' etc. and can be found in each mod description in the mod selection menu.
 
 **Uninstallation**
 --------------
@@ -169,9 +215,9 @@ in your terminal window.
 
 **Patches**
 
-Patches are files that are being used for patching the main game (OpenRA) so that it compiles successfully with Tiberian Sun & Red Alert 2 added. 
+Patches are files that are being used for patching the main game (OpenRA) so that it compiles successfully with Tiberian Sun & Red Alert 2 (& Dune 2) added. 
 
-Basically, Red Alert 2 locates in a different Github repository so patches are needed in order to merge it successfully with the OpenRA codebase. Additionally, some minor patch codes have been added for compilation of Tiberian Sun.
+Basically, Red Alert 2 & Dune 2 locate in a different Github repositories so patches are needed in order to merge them successfully with the OpenRA codebase. Additionally, some minor patch codes have been added for compilation of Tiberian Sun.
 
 Patches do not affect any bugs or features existing in the game.
 
@@ -183,9 +229,9 @@ Usage: add new patch file into the /data/patches/linux/ directory (Linux) or \da
 
 **Hotfixes**
 
-Hotfixes are considered as patches as well (yes, they are patch files, too). The main difference between patches and hotfixes is that hotfixes are meant to be used to fix bugs or add features in the game codebase whereas patches just make OpenRA compilation process with Tiberian Sun & Red Alert 2 possible. 
+Hotfixes are considered as patches as well (yes, they are patch files, too). The main difference between patches and hotfixes is that hotfixes are meant to be used to fix bugs or add features in the game codebase whereas patches just make OpenRA compilation process with Tiberian Sun & Red Alert 2 (& Dune 2) possible. 
 
-Hotfixes are unofficial in nature. They've not officially been applied by OpenRA developers or any other party and thus playing the game with them may make your version of openra-tibsunra2 incompatible with the official 'openra-bleed' and RA2 mod, even if git version numbers match with other players you see in the lobby.
+Hotfixes are unofficial in nature. They've not officially been applied by OpenRA developers or any other party and thus playing the game with them may make your version of openra-tibsunra2 incompatible with the official 'openra-bleed' and RA2/D2 mods, even if git version numbers match with other players you see in the lobby.
 
 Hotfixes can be used with other players. However, the hotfixes must have been applied into openra-tibsunra2 versions of any players you want to play with (not forgetting compatibility of git version numbers).
 
@@ -208,7 +254,6 @@ You need a Unix tool 'diff' to create new hotfixes (patch files). For additional
 [Apply patch file using patch command - Cyberciti.biz](http://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/)
 
 Remember to check "end of line" (Windows or Unix) for every hotfix patch file you create.
-
 
 **FAQ**
 --------------
@@ -245,7 +290,7 @@ On script related errors, please open a new issue on Github repository page:
 
 [Issues - Fincer/openra-tibsunra2 script](https://github.com/Fincer/openra-tibsunra2/issues "Script issues")
 
-If you are 100% sure the failure you've encountered is not caused by the script but happens even if OpenRA is manually compiled, please open a new issue or look for an existing issue here:
+If you are 100% sure the failure you've encountered is not caused by the script but happens even if OpenRA is manually compiled, please open a new issue or look for an existing one here:
 
 [Issues - OpenRA: main game](https://github.com/OpenRA/OpenRA/issues "OpenRA main game issues")
 
@@ -253,7 +298,7 @@ or
 
 [Issues - Red Alert 2: OpenRA mod](https://github.com/OpenRA/ra2/issues "OpenRA RA2 mod issues")
 
-**NOTE 3:** If you don't open a new issue or decide to be silent, the error may never be fixed. Errors rarely get fixed by being passive or just hoping them to be suddenly fixed by a miracle. I may not even know the issue you have. You've been informed and warned.
+**NOTE:** If you don't open a new issue or decide to be silent, the error may never be fixed. Errors rarely get fixed by being passive or just hoping them to be suddenly fixed by a miracle. I may not even know the issue you have. You've been informed and warned.
 
 **I demand you to add or fix feature X! I surely won't do it but you will because I say so!**
 
@@ -273,7 +318,7 @@ All official OpenRA Github pages are located at https://github.com/OpenRA/ + the
 
 This is not anyone's fault. OpenRA, as the name suggests, is an open source project done by volunteers at their will. Especially, Tiberian Sun & Red Alert 2 titles in OpenRA are known to still miss critical features existing in the original Westwood games. For example, you shouldn't expect for playable TS/RA2 missions until these features have been implemented. And yes, it can take time - a lot of it.
 
-OpenRA is an ambitious project trying to bring all Westwood classic RTS's as modernized versions to PC platforms as free. The project demands time, improvising, tweaking the code and very well organized project management which has its priorities. Many issues are found in [OpenRA/OpenRA](https://github.com/OpenRA/OpenRA/issues) and [OpenRA/ra2](https://github.com/OpenRA/ra2/issues) Github repositories, but the question is, how many developers are there around to address these issues, especially when we're talking about an open source project? To ask why TS or RA2 are still in development, let me put it simple: less developers -> less workforce -> more prioritizing -> delays in schedule. This may not be the case in OpenRA but, generally speaking, it likely can be.
+OpenRA is an ambitious project trying to bring all Westwood classic RTS's as modernized versions to PC platforms as free. The project demands time, improvising, tweaking the code and very well organized project management which has its priorities. Many issues are found in [OpenRA/OpenRA](https://github.com/OpenRA/OpenRA/issues) and [OpenRA/ra2](https://github.com/OpenRA/ra2/issues) Github repositories, but the question is, how many active developers are there around to address these issues, especially when we're talking about an open source project? To ask why TS or RA2 are still in development, let me put it simple: less developers -> less workforce -> more prioritizing -> delays in schedule. This may not be the case in OpenRA but, generally speaking, it likely can be.
 
 If you feel you want and are able to speed up the development process of OpenRA or TS/RA2, please consider contacting OpenRA development team (read: I'm not the one you should contact) or contributing the OpenRA project otherwise. You can help the team with coding or adding gameplay features or anything that is important and is considered as important to the project by the OpenRA developers.
 
@@ -305,7 +350,7 @@ According to [GraionDilach](https://github.com/GraionDilach) (OpenRA developer),
 
 Full comment [here](https://github.com/OpenRA/ra2/issues/309#issuecomment-257545830)
 
-If you feel you'd like to start the Yuri's Revenge project today, please feel free to do so. At least, the support for it will likely be added to this installation script.
+If you feel you'd like to start the Yuri's Revenge project today, please feel free to do so. At least, the support for it will likely be added to this installation script and be praised by members of CnC community.
 
 **Good OpenRA websites to check at**
 
@@ -313,6 +358,7 @@ Project sites:
 - [OpenRA homepage](www.openra.net)
 - [OpenRA Github project page](https://github.com/OpenRA/OpenRA)
 - [OpenRA Red Alert 2 Github project page](https://github.com/OpenRA/ra2)
+- [OpenRA Dune 2 Github project page](https://github.com/OpenRA/d2)
 
 Social media/Community sites:
 - [OpenRA Youtube channel](https://www.youtube.com/channel/UCRoiPL1J4K1-EhQeNazrYig)

@@ -1,0 +1,20 @@
+--- a/PKGBUILD
++++ b/PKGBUILD
+@@ -28,6 +28,17 @@
+     
+ build() {
+ 
++# Move Dune 2 Github files to the right place:
++    cd "$srcdir/d2"
++    mv ./OpenRA.Mods.D2 "$srcdir/$pkgname-src/"
++    mkdir -p "$srcdir/$pkgname-src/mods/d2/"
++    mv ./* "$srcdir/$pkgname-src/mods/d2/"
++
++# Get Dune 2 GIT version number for files
++    d2_version=git-$(git ls-remote https://github.com/OpenRA/d2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
++    sed -i "s/Version: {DEV_VERSION}/Version: $d2_version/g" $srcdir/$pkgname-src/mods/d2/mod.yaml
++    sed -i "s/maps\/d2\/{DEV_VERSION}/maps\/d2\/$d2_version/g" $srcdir/$pkgname-src/mods/d2/mod.yaml
++
+ # Move Red Alert 2 Github files to the right place:
+     cd "$srcdir/ra2"
+     mv ./OpenRA.Mods.RA2 "$srcdir/$pkgname-src/"

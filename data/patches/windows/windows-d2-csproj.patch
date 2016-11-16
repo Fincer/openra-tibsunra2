@@ -1,0 +1,70 @@
+--- a/OpenRA.Mods.D2/OpenRA.Mods.D2.csproj
++++ b/OpenRA.Mods.D2/OpenRA.Mods.D2.csproj
+@@ -17,8 +17,8 @@
+     <ErrorReport>prompt</ErrorReport>
+     <OutputPath>bin\Debug\</OutputPath>
+     <CustomCommands>
+-      <Command type="AfterBuild" command="cp ${TargetFile} .." workingdir="${ProjectDir}" />
+-      <Command type="AfterBuild" command="cp ${TargetFile}.mdb .." workingdir="${ProjectDir}" />
++      <Command type="AfterBuild" command="cp ${TargetFile} ../mods/d2" workingdir="${ProjectDir}" />
++      <Command type="AfterBuild" command="cp ${TargetFile}.mdb ../mods/d2" workingdir="${ProjectDir}" />
+     </CustomCommands>
+     <DefineConstants>TRACE;DEBUG;</DefineConstants>
+     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+@@ -36,20 +36,20 @@
+     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+     <Optimize>true</Optimize>
+     <CustomCommands>
+-      <Command type="AfterBuild" command="cp ${TargetFile} .." workingdir="${ProjectDir}" />
+-      <Command type="AfterBuild" command="cp ${TargetFile}.mdb .." workingdir="${ProjectDir}" />
++      <Command type="AfterBuild" command="cp ${TargetFile} ../mods/d2" workingdir="${ProjectDir}" />
++      <Command type="AfterBuild" command="cp ${TargetFile}.mdb ../mods/d2" workingdir="${ProjectDir}" />
+     </CustomCommands>
+     <Prefer32Bit>false</Prefer32Bit>
+   </PropertyGroup>
+   <ItemGroup>
+     <Reference Include="OpenRA.Game">
+-      <HintPath>dependencies\OpenRA.Game.exe</HintPath>
++      <HintPath>..\OpenRA.Mods.RA\OpenRA.Game.exe</HintPath>
+     </Reference>
+     <Reference Include="OpenRA.Mods.Common">
+-      <HintPath>dependencies\OpenRA.Mods.Common.dll</HintPath>
++      <HintPath>..\OpenRA.Mods.RA\OpenRA.Mods.Common.dll</HintPath>
+     </Reference>
+     <Reference Include="Eluant">
+-      <HintPath>dependencies\Eluant.dll</HintPath>
++      <HintPath>..\thirdparty\download\Eluant.dll</HintPath>
+       <Private>False</Private>
+     </Reference>
+     <Reference Include="System" />
+@@ -59,6 +59,18 @@
+     <Reference Include="System.Xml.Linq" />
+   </ItemGroup>
+   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
++    <ItemGroup>
++    <ProjectReference Include="..\OpenRA.Game\OpenRA.Game.csproj">
++      <Project>{0DFB103F-2962-400F-8C6D-E2C28CCBA633}</Project>
++      <Name>OpenRA.Game</Name>
++      <Private>False</Private>
++    </ProjectReference>
++    <ProjectReference Include="..\OpenRA.Mods.Common\OpenRA.Mods.Common.csproj">
++      <Project>{fe6c8cc0-2f07-442a-b29f-17617b3b7fc6}</Project>
++      <Name>OpenRA.Mods.Common</Name>
++      <Private>False</Private>
++    </ProjectReference>
++  </ItemGroup>
+   <ItemGroup>
+     <Compile Include="SpriteLoaders\IcnD2Loader.cs" />
+     <Compile Include="SpriteLoaders\CpsD2Loader.cs" />
+@@ -72,7 +84,8 @@
+     <Compile Include="D2LoadScreen.cs" />
+   </ItemGroup>
+   <PropertyGroup>
+-    <PostBuildEvent>copy $(TargetPath) $(ProjectDir)..
+-</PostBuildEvent>
++    <PostBuildEvent>mkdir "$(SolutionDir)mods/d2/"
++copy "$(TargetPath)" "$(SolutionDir)mods/d2/"
++cd "$(SolutionDir)"</PostBuildEvent>
+   </PropertyGroup>
+ </Project>
+\ No newline at end of file

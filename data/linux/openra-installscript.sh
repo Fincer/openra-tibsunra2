@@ -398,14 +398,12 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 
 ##Change OpenRA version as it is in Github & change PACKAGE variable after that
 	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
-		mv $HOME/openra-master/$PACKAGE $HOME/openra-master/$PACKAGE-$OPENRA_PKGVERSION$RA2_PKGVERSION$D2_PKGVERSION
-
-		PACKAGE=$PACKAGE-$OPENRA_PKGVERSION$RA2_PKGVERSION$D2_PKGVERSION
+		PACKAGE_VERSION=$(echo $OPENRA_PKGVERSION$RA2_PKGVERSION$D2_PKGVERSION | sed 's/[A-Za-z]*//g') #Remove letters for dh_make
 	else
-		mv $HOME/openra-master/$PACKAGE $HOME/openra-master/$PACKAGE-$OPENRA_PKGVERSION$RA2_PKGVERSION
-
-		PACKAGE=$PACKAGE_NAME-$OPENRA_PKGVERSION$RA2_PKGVERSION
+		PACKAGE_VERSION=$(echo $OPENRA_PKGVERSION$RA2_PKGVERSION | sed 's/[A-Za-z]*//g') #Remove letters for dh_make
 	fi
+		mv $HOME/openra-master/$PACKAGE $HOME/openra-master/$PACKAGE-$PACKAGE_VERSION
+		PACKAGE=$PACKAGE_NAME-$PACKAGE_VERSION
 
 	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
 		echo -e "$bold_in\n4/7 ***Starting OpenRA compilation with Dune 2, Tiberian Sun & Red Alert 2***
@@ -458,12 +456,8 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		cp ./data/linux/opensuse/openra.spec $HOME/openra-master/rpmbuild/SPECS/
 		cp ./data/linux/opensuse/{GeoLite2-Country.mmdb.gz,thirdparty.tar.gz} $HOME/openra-master/rpmbuild/SOURCES/
 
-		##Change OpenRA + RA2 (& Dune 2) version as it is in Github
-		if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
-			sed -i "s/Version:        1/Version:        $OPENRA_PKGVERSION$RA2_PKGVERSION$D2_PKGVERSION/g" $HOME/openra-master/rpmbuild/SPECS/openra.spec
-		else
-			sed -i "s/Version:        1/Version:        $OPENRA_PKGVERSION$RA2_PKGVERSION/g" $HOME/openra-master/rpmbuild/SPECS/openra.spec
-		fi
+	##Change OpenRA + RA2 (& Dune 2) version as it is in Github
+		sed -i "s/Version:        1/Version:        $PACKAGE_VERSION/g" $HOME/openra-master/rpmbuild/SPECS/openra.spec
 
 		cd $HOME/openra-master
 		tar -czf $HOME/openra-master/rpmbuild/SOURCES/$PACKAGE.tar.gz ./$PACKAGE

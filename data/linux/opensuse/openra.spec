@@ -83,7 +83,6 @@ make DESTDIR="%{buildroot}" prefix=%{_prefix} install-linux-mime
 make DESTDIR="%{buildroot}" prefix=%{_prefix} install-linux-appdata
 make DESTDIR="%{buildroot}" prefix=%{_prefix} install-man-page
 
-rm -rf %{buildroot}/usr/lib/openra/{SharpFont.dll.config,SDL2-CS.dll.config,OpenAL-CS.dll.config,Eluant.dll.config}
 rm -rf %{buildroot}/usr/lib/openra/mods/cnc/OpenRA.Mods.Cnc.dll.mdb
 rm -rf %{buildroot}/usr/lib/openra/mods/common/OpenRA.Mods.Common.dll.mdb
 rm -rf %{buildroot}/usr/lib/openra/mods/d2k/OpenRA.Mods.D2k.dll.mdb

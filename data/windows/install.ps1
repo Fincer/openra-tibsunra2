@@ -398,12 +398,9 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item .\data\windows\OpenRA-bleed\launch-dedicated.sh
 	Remove-Item .\data\windows\OpenRA-bleed\appveyor.yml
 	Remove-Item .\data\windows\OpenRA-bleed\dupFinder.xslt
-	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Game.exe.config
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Game.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Server.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Platforms.Default.pdb
-	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.dll.config
-	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Utility.exe.config
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.nunit
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.pdb

@@ -1,7 +1,7 @@
 # Maintainer: Fincer <fincer89 at hotmail dot com>
 
 pkgname=openra-bleed-tibsunra2
-pkgver=r22238.0479b7f
+pkgver=r22244.c12cfbc
 pkgrel=1
 pkgdesc="An open-source implementation of the Red Alert engine using .NET/mono and OpenGL (git version)"
 arch=("any")
@@ -17,9 +17,12 @@ source=("$pkgname-src::git+https://github.com/OpenRA/OpenRA.git#branch=bleed"
 "git://github.com/OpenRA/ra2.git"
 sha1sums=('SKIP'
           'SKIP'
-          '2e67a7f84d78d7b9ce8981ebb578c7b744406406'
-          '412fb02c061918c1a997359713427fa357340a91'
-          '5d73aedf0b3f6736981c727646c122d3c75ea27b')
+          'SKIP'
+          '5d73aedf0b3f6736981c727646c122d3c75ea27b'
+          'af97ff3908959e60f44949ee874d9035999c9fc3'
+          '7e87cb67e8ade6397129e45203e67504d572abf6'
+          '07930220fbd876492085d82ec33001316b6862f9'
+          '9846854381f099e734d41dafe8eaa9457e27250b')
 
 pkgver() {
     cd "$srcdir/$pkgname-src"
@@ -63,6 +66,4 @@ package() {
 
     rm $pkgdir/usr/lib/openra/mods/ra2/{build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
     rm $pkgdir/usr/lib/openra/mods/ts/OpenRA.Mods.TS.dll.mdb
-    
-    rm $pkgdir/usr/lib/openra/{SharpFont.dll.config,SDL2-CS.dll.config,OpenAL-CS.dll.config,Eluant.dll.config}
 }

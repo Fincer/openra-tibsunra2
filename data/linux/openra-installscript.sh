@@ -431,9 +431,6 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 			rm $HOME/openra-master/$PACKAGE/mods/d2/OpenRA.Mods.D2.dll.mdb
 		fi
 
-		# rm $HOME/openra-master/$PACKAGE/{SharpFont.dll.config,SDL2-CS.dll.config,OpenAL-CS.dll.config,Eluant.dll.config}
-		##Can't remove .config files at this moment due to deb packaging mechanism!
-
 		echo -e "$bold_in\n5/7 ***Preparing OpenRA deb package. This takes a while. Please wait.***\n$out"
 		dh_make --createorig -s -y && \
 		echo -e "\noverride_dh_auto_install:\n\tmake install-all install-linux-shortcuts prefix='$HOME/openra-master/$PACKAGE/debian/$PACKAGE_NAME/usr'\n\tsed -i '2s%.*%cd /usr/lib/openra%' '$HOME/openra-master/$PACKAGE/debian/$PACKAGE_NAME/usr/bin/openra'\noverride_dh_usrlocal:\noverride_dh_auto_test:" >> $HOME/openra-master/$PACKAGE/debian/rules && \

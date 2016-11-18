@@ -1,0 +1,109 @@
+--- a/OpenRA.Mods.RA2/OpenRA.Mods.RA2.csproj
++++ b/OpenRA.Mods.RA2/OpenRA.Mods.RA2.csproj
+@@ -12,53 +12,64 @@
+   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+     <PlatformTarget>x86</PlatformTarget>
+   </PropertyGroup>
+-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+     <DebugSymbols>True</DebugSymbols>
+     <DebugType>Full</DebugType>
+     <Optimize>False</Optimize>
+     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+     <DefineConstants>DEBUG;TRACE</DefineConstants>
+     <OutputPath>bin\Debug\</OutputPath>
++    <PlatformTarget>x86</PlatformTarget>
++    <ErrorReport>prompt</ErrorReport>
+     <CustomCommands>
+       <CustomCommands>
+-        <Command type="AfterBuild" command="cp ${TargetFile} .." workingdir="${ProjectDir}" />
+-        <Command type="AfterBuild" command="cp ${TargetFile}.mdb .." workingdir="${ProjectDir}" />
++        <Command type="AfterBuild" command="cp ${TargetFile} ../mods/ra2" workingdir="${ProjectDir}" />
++        <Command type="AfterBuild" command="cp ${TargetFile}.mdb ../mods/ra2" workingdir="${ProjectDir}" />
+       </CustomCommands>
+     </CustomCommands>
++    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
++    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+   </PropertyGroup>
+-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+-    <DebugSymbols>False</DebugSymbols>
+-    <DebugType>None</DebugType>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
++    <DebugSymbols>True</DebugSymbols>
++    <DebugType>pdbonly</DebugType>
+     <Optimize>True</Optimize>
+     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+     <DefineConstants>TRACE</DefineConstants>
+     <OutputPath>bin\Release\</OutputPath>
++    <PlatformTarget>x86</PlatformTarget>
++    <ErrorReport>prompt</ErrorReport>
+     <CustomCommands>
+       <CustomCommands>
+-        <Command type="AfterBuild" command="cp ${TargetFile} .." workingdir="${ProjectDir}" />
+-        <Command type="AfterBuild" command="cp ${TargetFile}.mdb .." workingdir="${ProjectDir}" />
++        <Command type="AfterBuild" command="cp ${TargetFile} ../mods/ra2" workingdir="${ProjectDir}" />
++        <Command type="AfterBuild" command="cp ${TargetFile}.mdb ../mods/ra2" workingdir="${ProjectDir}" />
+       </CustomCommands>
+     </CustomCommands>
++    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
++    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+   </PropertyGroup>
+   <ItemGroup>
++    <Reference Include="System" />
++    <Reference Include="System.Core" />
++    <Reference Include="System.Drawing" />
+     <Reference Include="Microsoft.CSharp" />
+     <Reference Include="OpenRA.Game">
+-      <HintPath>dependencies\OpenRA.Game.exe</HintPath>
++      <HintPath>..\OpenRA.Mods.RA\OpenRA.Game.exe</HintPath>
+     </Reference>
+     <Reference Include="OpenRA.Mods.Common">
+-      <HintPath>dependencies\OpenRA.Mods.Common.dll</HintPath>
++      <HintPath>..\OpenRA.Mods.RA\OpenRA.Mods.Common.dll</HintPath>
+     </Reference>
+     <Reference Include="OpenRA.Mods.RA">
+-      <HintPath>dependencies\OpenRA.Mods.RA.dll</HintPath>
++      <HintPath>..\OpenRA.Mods.RA\OpenRA.Mods.RA.dll</HintPath>
+     </Reference>
+     <Reference Include="OpenRA.Mods.TS">
+-      <HintPath>dependencies\OpenRA.Mods.TS.dll</HintPath>
++      <HintPath>..\OpenRA.Mods.TS\OpenRA.Mods.TS.dll</HintPath>
+     </Reference>
+     <Reference Include="Eluant">
+-      <HintPath>dependencies\Eluant.dll</HintPath>
++      <HintPath>..\thirdparty\download\Eluant.dll</HintPath>
+     </Reference>
+     <Reference Include="Eluant">
+-      <HintPath>dependencies\Eluant.dll</HintPath>
++      <HintPath>..\thirdparty\download\Eluant.dll</HintPath>
+       <Private>False</Private>
+     </Reference>
+     <Reference Include="System" />
+@@ -68,10 +79,27 @@
+   </ItemGroup>
+   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+   <ItemGroup>
++    <ProjectReference Include="..\OpenRA.Game\OpenRA.Game.csproj">
++      <Project>{0DFB103F-2962-400F-8C6D-E2C28CCBA633}</Project>
++      <Name>OpenRA.Game</Name>
++      <Private>False</Private>
++    </ProjectReference>
++    <ProjectReference Include="..\OpenRA.Mods.Common\OpenRA.Mods.Common.csproj">
++      <Project>{fe6c8cc0-2f07-442a-b29f-17617b3b7fc6}</Project>
++      <Name>OpenRA.Mods.Common</Name>
++      <Private>False</Private>
++    </ProjectReference>
++  </ItemGroup>
++  <ItemGroup>
+     <Compile Include="Activities\ChronoResourceTeleport.cs" />
+     <Compile Include="Traits\ChronoResourceDelivery.cs" />
+     <Compile Include="Traits\Render\WithExitOverlay.cs" />
+     <Compile Include="Traits\Render\WithSwimSuit.cs" />
+   </ItemGroup>
++  <PropertyGroup>
++    <PostBuildEvent>mkdir "$(SolutionDir)mods/ra2/"
++copy "$(TargetPath)" "$(SolutionDir)mods/ra2/"
++cd "$(SolutionDir)"</PostBuildEvent>
++  </PropertyGroup>
+ </Project>
+  

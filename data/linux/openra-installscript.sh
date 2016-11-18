@@ -160,7 +160,7 @@ if [[ $(echo $response | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
 	read -r -p "Please type 1 or 2 (Default: 2): " number
 	attempts=5
-	while [[ ! $(echo $number | sed 's/ //g') -eq 1 && ! $(echo $number | sed 's/ //g') -eq 2 ]]; do
+	while [[ ! $(echo $number | sed 's/ //g') -eq 1 && ! $(echo $number | sed 's/ //g') -eq 2 && ! $(echo $number | sed 's/ //g') == "" ]]; do
 		attempts=$(($attempts -1))
 		if [[ $attempts -eq 0 ]]; then
 			echo -e "\nMaximum attempts reached. Aborting.\n"
@@ -170,6 +170,10 @@ if [[ $(echo $response | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		read number
 		let number=$(echo $number | sed 's/ //g')
 	done
+
+	if [[ $number == "" ]]; then
+	let number=2
+	fi
 
 	sleep 1
 

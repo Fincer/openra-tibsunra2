@@ -163,6 +163,9 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 		"`nMerging OpenRA source & Red Alert 2 + Dune 2 mod files."
 		Copy-Item -Recurse ".\data\windows\d2-master\OpenRA.Mods.D2" ".\data\windows\OpenRA-bleed\OpenRA.Mods.D2"
 		Copy-Item -Recurse ".\data\windows\d2-master" ".\data\windows\OpenRA-bleed\mods\d2"
+
+		Remove-Item -Recurse .\data\windows\d2-master\*
+
 		Copy-Item -Recurse ".\data\windows\ra2-master\OpenRA.Mods.RA2" ".\data\windows\OpenRA-bleed\OpenRA.Mods.RA2"
 		Copy-Item -Recurse ".\data\windows\ra2-master" ".\data\windows\OpenRA-bleed\mods\ra2"
 	} else {
@@ -432,6 +435,9 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 
 	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
 		Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion-d2$d2_folderversion"
+
+		Remove-Item .\data\windows\d2-master
+
 	} else {
 		Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion"
 	}

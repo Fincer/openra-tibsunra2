@@ -1,6 +1,6 @@
 --- a/make.ps1
 +++ b/make.ps1
-@@ -108,7 +108,7 @@
+@@ -71,7 +71,7 @@
  	
  	if ($version -ne $null)
  	{

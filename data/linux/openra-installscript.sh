@@ -49,7 +49,7 @@ elif [[ $DISTRO =~ $OPENSUSE ]]; then
 	PKG1_CHECK=$(rpm -qa openra | wc -l)
 	PKG2_CHECK=$(rpm -qa openra-playtest | wc -l)
 	PKG3_CHECK=$(rpm -qa openra-bleed | wc -l)
-	
+
 elif [[ $DISTRO =~ $FEDORA ]]; then
 
 # Find out used Fedora version
@@ -149,7 +149,7 @@ fi
 echo -e "You are using $RELEASE.\n"
 read -r -p "Do you want to continue? [y/N] " response
 
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+if [[ $(echo $response | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	sleep 1
 
 	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
@@ -157,7 +157,20 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	elif [[ $DISTRO =~ $OPENSUSE ]] || [[ $DISTRO =~ $FEDORA ]]; then
 		echo -e "\nAllright, let's continue. Do you want $bold_in\n\n1.$out manually check which OpenRA build dependencies (packages) will be installed on your system and manually install OpenRA after compilation? $dim_in(manual rpm packages installation)$bold_in\n2.$out automatically accept the installation of the OpenRA build dependencies during the script execution and automatically install OpenRA after compilation? $dim_in(automatic installation of rpm packages)$out\n"
 	fi
+
 	read -r -p "Please type 1 or 2 (Default: 2): " number
+	attempts=5
+	while [[ ! $(echo $number | sed 's/ //g') -eq 1 && ! $(echo $number | sed 's/ //g') -eq 2 ]]; do
+		attempts=$(($attempts -1))
+		if [[ $attempts -eq 0 ]]; then
+			echo -e "\nMaximum attempts reached. Aborting.\n"
+			break
+		fi
+		echo -e "\nInvalid answer. Expected number 1 or 2. Please type again ($attempts attempts left):\n"
+		read number
+		let number=$(echo $number | sed 's/ //g')
+	done
+
 	sleep 1
 
 	echo -e "\nDune 2 -- Question\n"
@@ -171,7 +184,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		echo -e "\nMore information about hotfixes: https://github.com/Fincer/openra-tibsunra2/#about-patches--hotfixes\n"
 		read -r -p "Use these hotfixes? [y/N] " hotfixes
 
-		if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+		if [[ $(echo $hotfixes | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 			echo -e "\nHotfixes applied. Continuing."
 			sleep 2
 		else
@@ -179,7 +192,7 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 			sleep 2
 		fi
 	fi
-	
+
 	if [[ $number -eq 1 ]]; then
 		METHOD=''
 		echo -e "\nSelected installation method:$bold_in Manual$out"
@@ -196,14 +209,14 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
 	if [[ $(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | wc -l) -eq 0 ]]; then
 	echo -e "Available hotfixes:$bold_in None$out"
 	else
-		if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+		if [[ $(echo $hotfixes | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 			echo -e "Use hotfixes:$bold_in Yes$out"
 		else
 			echo -e "Use hotfixes:$bold_in No$out"
 		fi
 	fi
 
-	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 		echo -e "Install Dune 2:$bold_in Yes$out"
 	else
 		echo -e "Install Dune 2:$bold_in No$out"
@@ -301,7 +314,7 @@ function sudocheck() {
 ## Once Red Alert 2 source files have been downloaded, move them to the OpenRA parent source directory. 
 ## Add several missing directories for Red Alert 2.
 
-	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 	echo -e "$bold_in\n2/7 ***Downloading OpenRA source code & Red Alert 2 + Dune 2 mod files from Github***\n$out"
 	else
 	echo -e "$bold_in\n2/7 ***Downloading OpenRA source code & Red Alert 2 mod files from Github***\n$out"
@@ -332,7 +345,7 @@ function sudocheck() {
 ## Download the latest Dune 2 mod files from Github
 ## Once Dune 2 source files have been downloaded, move them to the OpenRA parent source directory.
 
-	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 		echo -e "\nPart 3 (Dune 2 mod files):\n"
 
 		git clone -b master https://github.com/OpenRA/d2.git $HOME/openra-master/d2 && \
@@ -343,7 +356,7 @@ function sudocheck() {
 #*********************************************************************************************************
 ## Apply patches & hotfixes
 
-	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 		#Copy all patch files excluding the one which modifies 'mods' string in the Linux Makefile (double patching it will cause conflicts between D2 and RA2)
 		cp ./data/patches/linux/*.patch $HOME/openra-master/
 		rm $HOME/openra-master/linux-ra2-make-modstrings.patch
@@ -353,7 +366,7 @@ function sudocheck() {
 		rm $HOME/openra-master/linux-d2*.patch
 	fi
 
-	if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+	if [[ $(echo $hotfixes | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 		cp ./data/hotfixes/linux/*.patch $HOME/openra-master/
 	fi
 
@@ -362,7 +375,7 @@ function sudocheck() {
 #
 ## Patch several OpenRA source files (Makefile and such) for Tiberian Sun & Red Alert 2
 
-	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 		echo -e "$bold_in\n3/7 ***Preparing OpenRA source files for Dune 2, Tiberian Sun & Red Alert 2***\n$out"
 	else
 		echo -e "$bold_in\n3/7 ***Preparing OpenRA source files for Tiberian Sun & Red Alert 2***\n$out"
@@ -381,7 +394,7 @@ OPENRA_PKGVERSION=$(git ls-remote https://github.com/OpenRA/OpenRA.git | head -1
 RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 
 # Get version number for Dune 2 mod files if the mod is about to be installed (Github)
-	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 
 		D2_VERSION=git-$(git ls-remote https://github.com/OpenRA/d2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
 
@@ -397,7 +410,7 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 ## Compile the game
 
 ##Change OpenRA version as it is in Github & change PACKAGE variable after that
-	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 		PACKAGE_VERSION=$(echo $OPENRA_PKGVERSION$RA2_PKGVERSION$D2_PKGVERSION | sed 's/[A-Za-z]*//g') #Remove letters for dh_make
 	else
 		PACKAGE_VERSION=$(echo $OPENRA_PKGVERSION$RA2_PKGVERSION | sed 's/[A-Za-z]*//g') #Remove letters for dh_make
@@ -405,13 +418,13 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		mv $HOME/openra-master/$PACKAGE $HOME/openra-master/$PACKAGE-$PACKAGE_VERSION
 		PACKAGE=$PACKAGE_NAME-$PACKAGE_VERSION
 
-	if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 		echo -e "$bold_in\n4/7 ***Starting OpenRA compilation with Dune 2, Tiberian Sun & Red Alert 2***
 		$out"
 	else
 		echo -e "$bold_in\n4/7 ***Starting OpenRA compilation with Tiberian Sun & Red Alert 2***$out"
 	fi
-	
+
 	sleep 2
 	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
 		cd $HOME/openra-master/$PACKAGE && \
@@ -427,7 +440,7 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		rm $HOME/openra-master/$PACKAGE/mods/ra2/{.gitattributes,.gitignore,.travis.yml,build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
 		rm $HOME/openra-master/$PACKAGE/mods/ts/OpenRA.Mods.TS.dll.mdb
 
-		if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+		if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 			rm $HOME/openra-master/$PACKAGE/mods/d2/OpenRA.Mods.D2.dll.mdb
 		fi
 
@@ -483,7 +496,7 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		else
 			if [[ $number -eq 1 ]]; then
 				read -r -p "Install '$PACKAGE_NAME' now? [y/N] " response4
-					if [[ $response4 =~ ^([yY][eE][sS]|[yY])$ ]]; then
+					if [[ $(echo $response4 | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 						sudo dpkg -i $HOME/$PACKAGE_NAME*.deb
 					else
 						echo -e "\nPlease install '$PACKAGE_NAME' manually. You find the compiled package in '$HOME'."
@@ -499,7 +512,7 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		else
 			if [[ $number -eq 1 ]]; then
 				read -r -p "Install '$PACKAGE_NAME' now? [y/N] " response4
-					if [[ $response4 =~ ^([yY][eE][sS]|[yY])$ ]]; then
+					if [[ $(echo $response4 | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 						if [[ $DISTRO =~ $FEDORA ]]; then
 							sudo dnf $METHOD --best --allowerasing install $HOME/$PACKAGE_NAME*.rpm
 						elif [[ $DISTRO =~ $OPENSUSE ]]; then

@@ -49,6 +49,9 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 
 	$hotfixes = Read-Host "Use these hotfixes? (y/N)"
 
+	#Remove spaces if entered
+	$hotfixes = $hotfixes -replace '\s',''
+
 	if ($hotfixes -eq "y") {
 		"`nHotfixes applied. Continuing."
 	} else {
@@ -61,6 +64,9 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	"`n- Dune 2 -- Question`n"
 
 	$dune2_install = Read-Host "Additionally, Dune 2 can be installed, too. Do you want to install it? [y/N] (Default: y)"
+
+	#Remove spaces if entered
+	$dune2_install = $dune2_install -replace '\s',''
 
 	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
 		"`nInstall Dune 2: Yes"

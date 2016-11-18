@@ -82,23 +82,34 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 	echo -e "\n$bold_in***Welcome Comrade*** $out\n" 
 	echo -e "You are about to install OpenRA with Tiberian Sun & Red Alert 2 on Arch Linux.\n"
 	read -r -p "Do you want to continue? [y/N] " response
-		if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
-		
-			echo -e "\nAllright, let's continue. Do you want $bold_in\n\n1.$out manually install OpenRA after its compilation? $dim_in(manual pacman installation)$bold_in\n2.$out automatically install OpenRA after its compilation? $dim_in(pacman -U <compiled_openra_package>)$out\n"
-	
-			read -r -p "Please type 1 or 2 (Default: 2): " number
-			sleep 1
+		if [[ $(echo $response | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 
+			echo -e "\nAllright, let's continue. Do you want $bold_in\n\n1.$out manually install OpenRA after its compilation? $dim_in(manual pacman installation)$bold_in\n2.$out automatically install OpenRA after its compilation? $dim_in(pacman -U <compiled_openra_package>)$out\n"
+
+			read -r -p "Please type 1 or 2 (Default: 2): " number
+			attempts=5
+			while [[ ! $(echo $number | sed 's/ //g') -eq 1 && ! $(echo $number | sed 's/ //g') -eq 2 ]]; do
+				attempts=$(($attempts -1))
+				if [[ $attempts -eq 0 ]]; then
+					echo -e "\nMaximum attempts reached. Aborting.\n"
+					break
+				fi
+				echo -e "\nInvalid answer. Expected number 1 or 2. Please type again ($attempts attempts left):\n"
+				read number
+				let number=$(echo $number | sed 's/ //g')
+			done
+
+			sleep 1
 			rm $WORKING_DIR/data/linux/arch_linux/*.patch
 
 			echo -e "\nDune 2 -- Question\n"
 			read -r -p "Additionally, Dune 2 can be installed, too. Do you want to install it? [y/N] (Default: y) " dune2_install
 			
-			if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+			if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 				#Copy all patch files excluding the one which modifies 'mods' string in the Linux Makefile (double patching it will cause conflicts between D2 and RA2)
 				cp ./data/patches/linux/*.patch ./data/linux/arch_linux/
 				rm ./data/linux/arch_linux/linux-ra2-make-modstrings.patch
-			else 
+			else
 				#Copy all patch files excluding the ones for Dune 2.
 				cp ./data/patches/linux/*.patch ./data/linux/arch_linux/
 				rm ./data/linux/arch_linux/linux-d2*.patch
@@ -111,9 +122,9 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 				echo -e $green_in$(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | sed -e 's/.*\///' -e 's/\.[^\.]*$//')$out
 				echo -e "\nMore information about hotfixes: https://github.com/Fincer/openra-tibsunra2/#about-patches--hotfixes\n"
 				read -r -p "Use these hotfixes? [y/N] " hotfixes
-					if [[ $hotfixes =~ ^([nN][oO][nN]|)$ ]]; then
+					if [[ $(echo $hotfixes | sed 's/ //g') =~ ^([nN][oO][nN]|)$ ]]; then
 						echo -e "\nHotfixes ignored and skipped. Continuing."
-					elif [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+					elif [[ $(echo $hotfixes | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 						cp ./data/hotfixes/linux/*.patch ./data/linux/arch_linux/
 						echo -e "\nHotfixes applied. Continuing."
 					else
@@ -130,14 +141,14 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			if [[ $(find $WORKING_DIR/data/hotfixes/linux/ -type f -iname *.patch | wc -l) -eq 0 ]]; then
 			echo -e "Available hotfixes:$bold_in None$out"
 			else
-				if [[ $hotfixes =~ ^([yY][eE][sS]|[yY])$ ]]; then
+				if [[ $(echo $hotfixes | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 					echo -e "Use hotfixes:$bold_in Yes$out"
 				else
 					echo -e "Use hotfixes:$bold_in No$out"
 				fi
 			fi
 
-			if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+			if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 				echo -e "Install Dune 2:$bold_in Yes$out"
 			else
 				echo -e "Install Dune 2:$bold_in No$out"
@@ -160,7 +171,7 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			sed -i '//i '${PATCHES}')' $WORKING_DIR/data/linux/arch_linux/PKGBUILD
 
 			#Add Dune 2 to PKGBUILD if it is going to be installed
-			if [[ ! $dune2_install =~ ^([nN][oO]|[nN])$ ]]; then
+			if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 
 			#Add Dune 2 sources (PKGBUILD -- source variable) -- Add Dune 2 git source
 				sed -i '/source=(/a "git:\/\/github.com\/OpenRA\/d2.git"' $WORKING_DIR/data/linux/arch_linux/PKGBUILD
@@ -232,8 +243,11 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
  			   	exit 1
 			fi
 
-		else
+		elif [[ $(echo $response | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 			echo -e "\nCancelling OpenRA installation.\n"
+			exit 1
+		else
+			echo -e "\nNot a valid answer. Expected [y/N].\n\nCancelling OpenRA installation.\n"
 			exit 1
 		fi
 fi
@@ -261,7 +275,7 @@ if [[ $DISTRO =~ "$UBUNTU" ]] || [[ $DISTRO =~ "$DEBIAN" ]]; then
 		if [[ -d $HOME/openra-master ]]; then
 			echo -e "\n"
 			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response2
-			if [[ $response2 =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			if [[ $(echo $response2 | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 				echo -e "\nDeleting.\n"
 				rm -Rf $HOME/openra-master
 			fi
@@ -296,7 +310,7 @@ if [[ $DISTRO =~ "$FEDORA" ]] || [[ $DISTRO =~ "$OPENSUSE" ]]; then
 		if [[ -d $HOME/openra-master ]]; then
 			echo -e "\n"
 			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response3
-			if [[ $response3 =~ ^([yY][eE][sS]|[yY])$ ]]; then
+			if [[ $(echo $response3 | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 				echo -e "\nDeleting.\n"
 				rm -Rf $HOME/openra-master
 			fi

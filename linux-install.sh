@@ -104,7 +104,7 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			fi
 
 			sleep 1
-			rm $WORKING_DIR/data/linux/arch_linux/*.patch
+			rm $WORKING_DIR/data/linux/arch_linux/*.patch 2>/dev/null
 
 			echo -e "\nDune 2 -- Question\n"
 			read -r -p "Additionally, Dune 2 can be installed, too. Do you want to install it? [y/N] (Default: y) " dune2_install

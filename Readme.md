@@ -120,10 +120,15 @@ You find these files from original RA2 installation media (CD's):
 ![alt text](https://img.youtube.com/vi/tppjzT-su0Q/default.jpg "Dune 2")
 
 1) Launch the game
+
 2) Select D2k
+
 3) Click "Manage Content"
+
 4) Click "Download" (in the "Base Game Files" row)
+
 5) Click Back
+
 6) Close the game
 
 7) Get the following files from D2k
@@ -277,6 +282,9 @@ Consider contributing the script development. It's not too hard if you have enou
 - Variety of dependency package names in OS repositories
 - Specific package manager commands
 - The script is based on: Bash + basic Linux commands (found on many distributions by default)
+
+**FreeBSD:** No support available, and not planned. Consider contributing the script development, if you feel you want a script for FreeBSD.
+- No additional information available
 
 **You provide outdated/wrong information here!**
 

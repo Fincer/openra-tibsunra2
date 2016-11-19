@@ -434,11 +434,11 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\mods\ra2\OpenRA.Mods.RA2
 
 	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
+		Remove-Item -Recurse .\data\windows\OpenRA-bleed\mods\d2\OpenRA.Mods.D2
+
 		Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion-d2$d2_folderversion"
 
 		Remove-Item .\data\windows\d2-master
-		Remove-Item -Recurse .\data\windows\OpenRA-bleed\mods\d2\OpenRA.Mods.D2
-
 	} else {
 		Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion"
 	}

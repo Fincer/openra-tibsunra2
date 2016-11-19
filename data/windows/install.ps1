@@ -437,6 +437,7 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 		Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion-d2$d2_folderversion"
 
 		Remove-Item .\data\windows\d2-master
+		Remove-Item -Recurse .\data\windows\OpenRA-bleed\mods\d2\OpenRA.Mods.D2
 
 	} else {
 		Copy-Item -Recurse ".\data\windows\OpenRA-bleed\" ".\OpenRA-tibsunra2-Windows-openra$openra_folderversion-ra2$ra2_folderversion"

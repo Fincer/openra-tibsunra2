@@ -275,8 +275,9 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 		Copy-Item ".\data\hotfixes\windows\*.patch" ".\data\windows"
 		}
 
-		#This file will conflict with windows-d2-make-modstrings.patch
-		Remove-Item .\data\windows\windows-ra2-make-modstrings.patch -Force -ErrorAction SilentlyContinue
+		#These files will conflict with windows-d2-ra2-make.patch & windows-d2-ra2-openra-solution.patch
+		Remove-Item .\data\windows\windows-ra2-make.patch -Force -ErrorAction SilentlyContinue
+		Remove-Item .\data\windows\windows-ra2-openra-solution.patch  -Force -ErrorAction SilentlyContinue
 
 	} else {
 
@@ -371,8 +372,6 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.Common
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.Cnc
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.D2k
-	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.RA
-	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.TS
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Mods.RA2
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Server
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Test
@@ -397,11 +396,9 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item .\data\windows\OpenRA-bleed\INSTALL.md
 	Remove-Item .\data\windows\OpenRA-bleed\Makefile
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.sln
-	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.sln.orig
 	Remove-Item .\data\windows\OpenRA-bleed\README.md
 	Remove-Item .\data\windows\OpenRA-bleed\Settings.StyleCop
 	Remove-Item .\data\windows\OpenRA-bleed\make.ps1
-	Remove-Item .\data\windows\OpenRA-bleed\make.ps1.orig
 	Remove-Item .\data\windows\OpenRA-bleed\make.cmd
 	Remove-Item .\data\windows\OpenRA-bleed\launch-game.sh
 	Remove-Item .\data\windows\OpenRA-bleed\launch-dedicated.sh
@@ -416,16 +413,13 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Utility.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\AUTHORS
 
-	Remove-Item .\data\windows\OpenRA-bleed\mods\cnc\OpenRA.Mods.Cnc.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\mods\common\OpenRA.Mods.Cnc.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\mods\common\OpenRA.Mods.Common.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\mods\d2k\OpenRA.Mods.D2k.pdb
-	Remove-Item .\data\windows\OpenRA-bleed\mods\ra\OpenRA.Mods.RA.pdb
-	Remove-Item .\data\windows\OpenRA-bleed\mods\ts\OpenRA.Mods.TS.pdb
 
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\build.cake
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\makefile
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\make.ps1
-	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\mod.yaml.orig
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\.gitattributes
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\.gitignore
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\.travis.yml

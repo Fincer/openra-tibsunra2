@@ -82,9 +82,9 @@ out='\e[0m'
 
 #Distribution related dependencies
 
-DEBIAN_DEPS=("git" "dpkg-dev" "dh-make" "mono-devel" "libfreetype6" "libopenal1" "libsdl2-2.0-0" "curl" "liblua5.1-0" "zenity" "xdg-utils" "build-essential" "gcc" "make" "libfile-fcntllock-perl")
-OPENSUSE_DEPS=("rpm-build" "git" "mono-devel" "libfreetype6" "libopenal1" "libSDL2-2_0-0" "curl" "lua51" "liblua5_1" "zenity" "xdg-utils" "gcc" "make")
-FEDORA_DEPS=("rpm-build" "git" "mono-devel" "freetype" "openal-soft" "SDL2" "libgdiplus-devel" "libcurl" "compat-lua" "zenity" "xdg-utils" "gcc" "make")
+DEBIAN_DEPS=("git" "dpkg-dev" "dh-make" "mono-devel" "libfreetype6" "libopenal1" "libsdl2-2.0-0" "curl" "liblua5.1-0" "zenity" "xdg-utils" "build-essential" "gcc" "make" "libfile-fcntllock-perl" "patch")
+OPENSUSE_DEPS=("rpm-build" "git" "mono-devel" "libfreetype6" "libopenal1" "libSDL2-2_0-0" "curl" "lua51" "liblua5_1" "zenity" "xdg-utils" "gcc" "make" "patch")
+FEDORA_DEPS=("rpm-build" "git" "mono-devel" "freetype" "openal-soft" "SDL2" "libgdiplus-devel" "libcurl" "compat-lua" "zenity" "xdg-utils" "gcc" "make" "patch")
 
 #*********************************************************************************************************
 ## PRE-CHECK
@@ -137,13 +137,13 @@ echo -e "This script compiles and installs OpenRA from source with Tiberian Sun 
 - The script creates an installation package using OpenRA source code and additional Red Alert 2 (and optionally Dune 2) mod files from Github.\n\nNOTE: As the development of OpenRA & Red Alert 2 (& Dune 2) continues, this script will likely become unusable some day. Please, feel free to modify it if necessary."
 
 if [[ $DISTRO =~ $UBUNTU ]]; then
-	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nUbuntu 16.10$green_in\t\tOK$out\nUbuntu 16.04 LTS$green_in\tOK$out\nUbuntu 15.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 15.04 LTS$green_in\tOK$out\nUbuntu 14.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 14.04 LTS$yellow_in\tOK (missing dependencies?)$out\nLinux Mint 18$green_in\t\tOK$out\nLinux Mint 17.3$green_in\t\tOK$out\nLinux Mint 17.2$green_in\t\tOK$out\nLinux Mint 17.1$yellow_in\t\tOK (missing dependencies?)$out\nLinux Mint 16$red_in\t\tFailure$out$dim_in (missing dependencies)$out\n"
+	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nUbuntu 17.04 LTS$green_in\tOK$out\nUbuntu 16.10$green_in\t\tOK$out\nUbuntu 16.04 LTS$green_in\tOK$out\nUbuntu 15.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 15.04 LTS$green_in\tOK$out\nUbuntu 14.10$yellow_in\t\tOK (missing dependencies?)$out\nUbuntu 14.04 LTS$yellow_in\tOK (missing dependencies?)$out\nLinux Mint 18$green_in\t\tOK$out\nLinux Mint 17.3$green_in\t\tOK$out\nLinux Mint 17.2$green_in\t\tOK$out\nLinux Mint 17.1$yellow_in\t\tOK (missing dependencies?)$out\nLinux Mint 16$red_in\t\tFailure$out$dim_in (missing dependencies)$out\n"
 elif [[ $DISTRO =~ $DEBIAN ]]; then
 	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nDebian 8.3 $green_in\t\tOK$out\n"
 elif [[ $DISTRO =~ $OPENSUSE ]]; then
 	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nOpenSUSE Tumbleweed $green_in\tOK$out\nOpenSUSE Leap 42.1 $green_in\tOK$out\nOpenSUSE 13.2 $green_in\t\tOK$out\nOpenSUSE 13.1 $red_in\t\tFailure$out$dim_in (missing dependencies)$out\n"
 elif [[ $DISTRO =~ $FEDORA ]]; then
-	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nFedora 23 $green_in\t\tOK$out\nFedora 22 $green_in\t\tOK$out\n"
+	echo -e "$line_in\nThe script has been tested on:\n\nDistribution\t\tStatus$out\nFedora 24 $green_in\t\tOK$out\nFedora 23 $green_in\t\tOK$out\nFedora 22 $red_in\t\tFailure$out$dim_in (missing dependencies)$out\n"
 fi
 
 echo -e "You are using $RELEASE.\n"
@@ -254,7 +254,7 @@ function sudocheck() {
 	
 	if [[ $DISTRO =~ $UBUNTU ]] || [[ $DISTRO =~ $DEBIAN ]]; then
 
-		if [[ ! $(dpkg-query -W -f='${Status}' "${DEBIAN_DEPS[@]}" | grep -c "not-installed") -eq 0 ]]; then #Find all dependency packages. If 'not-installed' string has match(es), then
+		if [[ ! $(apt-cache policy "${DEBIAN_DEPS[@]}" | grep -c "none") -eq 0 ]]; then #Find all dependency packages. If 'none' string has match(es), then
 			echo -e "Some dependencies are missing.\n"
 			sudocheck
 
@@ -266,8 +266,8 @@ function sudocheck() {
 			sleep 4
 
 			sudo apt-get $METHOD install ${DEBIAN_DEPS[@]}
-			mozroots --import --sync && \
-			sudo apt-key update || exit 1
+            #DEPRECATED COMMAND (Mozilla has dropped support):
+			#mozroots --import --sync && sudo apt-key update || exit 1
 		else
 			echo -e "All dependencies are met. Continuing."
 		fi
@@ -282,13 +282,14 @@ function sudocheck() {
 			else
 				sudo zypper $METHOD install ${OPENSUSE_DEPS[@]}
 			fi
-			mozroots --import --sync
+			#DEPRECATED COMMAND (Mozilla has dropped support):
+			#mozroots --import --sync
 		else
 			echo -e "All dependencies are met. Continuing."
 		fi
 
 	elif [[ $DISTRO =~ $FEDORA ]]; then
-		if [[ ! $(dnf list installed "${FEDORA_DEPS[@]}" 2>&1 | grep -c "Error") -eq 0 ]]; then #Find all dependency packages. If "Error" string has match(es), then
+		if [[ ! $(dnf list installed |grep "${FEDORA_DEPS[@]}" 2>&1 |grep -c "No such file or directory") -eq 0 ]]; then #Find all dependency packages. If "No such file or directory" string has match(es), then
 			echo -e "Some dependencies are missing.\n"
 			sudocheck
 
@@ -296,15 +297,19 @@ function sudocheck() {
 
 			cd /etc/yum.repos.d/
 
-			if [[ $RELEASE = "Fedora 23" ]]; then
-				sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_23/games:openra.repo
+			if [[ $RELEASE = "Fedora 25" ]]; then
+				sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_25/games:openra.repo
 				sudo dnf $METHOD --best --allowerasing install mono-core
-			elif [[ $RELEASE = "Fedora 22" ]]; then
-				sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_22/games:openra.repo
+			elif [[ $RELEASE = "Fedora 24" ]]; then
+				sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_24/games:openra.repo
+				sudo dnf $METHOD --best --allowerasing install mono-core
+			elif [[ $RELEASE = "Fedora 23" ]]; then
+				sudo wget http://download.opensuse.org/repositories/games:openra/Fedora_23/games:openra.repo
 				sudo dnf $METHOD --best --allowerasing install mono-core
 			fi
 			cd $WORKING_DIR
-			mozroots --import --sync
+			#DEPRECATED COMMAND (Mozilla has dropped support):
+			#mozroots --import --sync
 		else
 			echo -e "All dependencies are met. Continuing."
 		fi
@@ -363,7 +368,7 @@ function sudocheck() {
 	if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 		#Copy all patch files excluding the one which modifies 'mods' string in the Linux Makefile (double patching it will cause conflicts between D2 and RA2)
 		cp ./data/patches/linux/*.patch $HOME/openra-master/
-		rm $HOME/openra-master/linux-ra2-make-modstrings.patch
+		rm $HOME/openra-master/linux-ra2-make.patch
 	else
 		#Copy all patch files excluding the ones for Dune 2.
 		cp ./data/patches/linux/*.patch $HOME/openra-master/
@@ -437,12 +442,9 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		make all [DEBUG=false]
 
 		##Delete buildtime files:
-		rm $HOME/openra-master/$PACKAGE/mods/cnc/OpenRA.Mods.Cnc.dll.mdb
-		rm $HOME/openra-master/$PACKAGE/mods/common/OpenRA.Mods.Common.dll.mdb
+		rm $HOME/openra-master/$PACKAGE/mods/common/{OpenRA.Mods.Common.dll.mdb,OpenRA.Mods.Cnc.dll.mdb}
 		rm $HOME/openra-master/$PACKAGE/mods/d2k/OpenRA.Mods.D2k.dll.mdb
-		rm $HOME/openra-master/$PACKAGE/mods/ra/OpenRA.Mods.RA.dll.mdb
 		rm $HOME/openra-master/$PACKAGE/mods/ra2/{.gitattributes,.gitignore,.travis.yml,build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
-		rm $HOME/openra-master/$PACKAGE/mods/ts/OpenRA.Mods.TS.dll.mdb
 
 		if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 			rm $HOME/openra-master/$PACKAGE/mods/d2/OpenRA.Mods.D2.dll.mdb
@@ -468,7 +470,7 @@ RA2_PKGVERSION=$(git ls-remote https://github.com/OpenRA/ra2.git | head -1 | sed
 		echo -e "$bold_in\n5/7 ***Compiling OpenRA rpm package.***\n$out"
 		mkdir -p $HOME/openra-master/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 		cp ./data/linux/opensuse/openra.spec $HOME/openra-master/rpmbuild/SPECS/
-		cp ./data/linux/opensuse/{GeoLite2-Country.mmdb.gz,thirdparty.tar.gz} $HOME/openra-master/rpmbuild/SOURCES/
+		wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz -P $HOME/openra-master/rpmbuild/SOURCES/thirdparty/download/
 
 	##Change OpenRA + RA2 (& Dune 2) version as it is in Github
 		sed -i "s/Version:        1/Version:        $PACKAGE_VERSION/g" $HOME/openra-master/rpmbuild/SPECS/openra.spec

@@ -72,7 +72,7 @@ echo -e  "$bold_in\n***OpenRA compilation script completed.\nPlease see further 
 sleep 2
 echo -e "$bold_in\n***MANUAL INSTALLATION***$out\n\nInstall OpenRA by typing '$PACKAGEMANAGER_INSTALL $WORKING_DIR/$PACKAGE_NAME' (without quotations) in a terminal window."
 sleep 4
-echo -e "$bold_in\n***TIBERIAN SUN & RED ALERT 2 - HOWTO***$out\n\nTO PLAY TIBERIAN SUN: Launch the game and download the required asset files from the web when the game asks you to do so.\n\nTO PLAY RED ALERT 2: You must install language.mix, multi.mix, ra2.mix and theme.mix into '$HOME/.openra/Content/ra2/' folder. You find these files from original RA2 installation media (CD's):\n\n-theme.mix, multi.mix = RA2 CD Root folder\n-ra2.mix, language.mix = RA2 CD Root/INSTALL/Game1.CAB (inside that archive file)\n\nTO PLAY DUNE 2 (if installed): Please see https://github.com/Fincer/openra-tibsunra2/ front page for further instructions.$bold_in\n\n***LAUNCHING OPENRA***$out\n\nTo launch OpenRA, simply type 'openra' (without quotations) in your terminal or use a desktop shortcut file.$bold_in\n\n***UNINSTALLATION***$out\n\nIf you want to remove OpenRA, just type '$PACKAGEMANAGER_REMOVE $INSTALL_NAME' (without quotations)\n\nYou can find package of $INSTALL_NAME in '$HOME' for further usage.$bold_in\n\n***MULTIPLAYER***$out\n\nIt's recommended to build OpenRA using exactly same GIT source files for multiplayer usage to minimize possible version differences/conflicts between players. Please make sure all players have exactly same git versions of their in-game mods (RA, CNC, D2, D2K, TS, RA2). Version numbers are formatted like 'git-e0d7445' etc. and can be found in each mod description in the mod selection menu.\n\nFor this compilation, the version numbers are as follows:\nOpenRA version: $OPENRA_GITVERSION\nRA2 version: $RA2_GITVERSION\nDune 2 version (if installed): $D2_GITVERSION\n\nHave fun!\n"
+echo -e "$bold_in\n***TIBERIAN SUN & RED ALERT 2 - HOWTO***$out\n\nTO PLAY TIBERIAN SUN: Launch the game and download the required asset files from the web when the game asks you to do so.\n\nTO PLAY RED ALERT 2: You must install language.mix, multi.mix, ra2.mix and theme.mix into '$HOME/.openra/Content/ra2/' folder. You find these files from original RA2 installation media (CD's):\n\n-theme.mix, multi.mix = RA2 CD Root folder\n-ra2.mix, language.mix = RA2 CD Root/INSTALL/Game1.CAB (inside that archive file)\n\nTO PLAY DUNE 2 (if installed): Please see https://github.com/Fincer/openra-tibsunra2/ front page for further instructions.$bold_in\n\n***LAUNCHING OPENRA***$out\n\nTo launch OpenRA, simply type 'openra' (without quotations) in your terminal or use a desktop shortcut file.$bold_in\n\n***UNINSTALLATION***$out\n\nIf you want to remove OpenRA, just type '$PACKAGEMANAGER_REMOVE $INSTALL_NAME' (without quotations)\n\nYou can find package of $INSTALL_NAME in '$HOME' for further usage (Arch Linux: $WORKING_DIR).$bold_in\n\n***MULTIPLAYER***$out\n\nIt's recommended to build OpenRA using exactly same GIT source files for multiplayer usage to minimize possible version differences/conflicts between players. Please make sure all players have exactly same git versions of their in-game mods (RA, CNC, D2, D2K, TS, RA2). Version numbers are formatted like 'git-e0d7445' etc. and can be found in each mod description in the mod selection menu.\n\nFor this compilation, the version numbers are as follows:\nOpenRA version: $OPENRA_GITVERSION\nRA2 version: $RA2_GITVERSION\nDune 2 version (if installed): $D2_GITVERSION\n\nHave fun!\n"
 }
 
 ##-------------------------------------------------------------
@@ -112,7 +112,7 @@ if [[ $DISTRO =~ "$ARCH" ]]; then
 			if [[ ! $(echo $dune2_install | sed 's/ //g') =~ ^([nN][oO]|[nN])$ ]]; then
 				#Copy all patch files excluding the one which modifies 'mods' string in the Linux Makefile (double patching it will cause conflicts between D2 and RA2)
 				cp ./data/patches/linux/*.patch ./data/linux/arch_linux/
-				rm ./data/linux/arch_linux/linux-ra2-make-modstrings.patch
+				rm ./data/linux/arch_linux/linux-ra2-make.patch
 			else
 				#Copy all patch files excluding the ones for Dune 2.
 				cp ./data/patches/linux/*.patch ./data/linux/arch_linux/
@@ -278,7 +278,7 @@ if [[ $DISTRO =~ "$UBUNTU" ]] || [[ $DISTRO =~ "$DEBIAN" ]]; then
 		endtext_fail
 		if [[ -d $HOME/openra-master ]]; then
 			echo -e "\n"
-			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response2
+			read -r -p "Found temporary OpenRA compilation files in $HOME. Delete them now? [y/N] " response2
 			if [[ $(echo $response2 | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 				echo -e "\nDeleting.\n"
 				rm -Rf $HOME/openra-master
@@ -313,7 +313,7 @@ if [[ $DISTRO =~ "$FEDORA" ]] || [[ $DISTRO =~ "$OPENSUSE" ]]; then
 		endtext_fail
 		if [[ -d $HOME/openra-master ]]; then
 			echo -e "\n"
-			read -r -p "Found temporary OpenRA compilation files in $HOME. Remove them now? [y/N] " response3
+			read -r -p "Found temporary OpenRA compilation files in $HOME. Delete them now? [y/N] " response3
 			if [[ $(echo $response3 | sed 's/ //g') =~ ^([yY][eE][sS]|[yY])$ ]]; then
 				echo -e "\nDeleting.\n"
 				rm -Rf $HOME/openra-master

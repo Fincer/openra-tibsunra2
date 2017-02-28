@@ -1,0 +1,47 @@
+--- a/OpenRA.Mods.RA2/Traits/Render/WithExitOverlay.cs
++++ b/OpenRA.Mods.RA2/Traits/Render/WithExitOverlay.cs
+@@ -36,13 +36,18 @@
+ 		public object Create(ActorInitializer init) { return new WithExitOverlay(init.Self, this); }
+ 	}
+ 
+-	public class WithExitOverlay : INotifyDamageStateChanged, INotifyBuildComplete, INotifySold, INotifyProduction, ITick
++	public class WithExitOverlay : INotifyDamageStateChanged, INotifyBuildComplete, INotifySold, INotifyProduction
+ 	{
+ 		readonly Actor self;
+ 		readonly Animation overlay;
+-		bool buildComplete, enable;
++		bool buildComplete;
+ 		CPos exit;
+ 
++		bool IsExitBlocked
++		{
++			get { return self.World.ActorMap.GetActorsAt(exit).Any(a => a != self); }
++		}
++
+ 		public WithExitOverlay(Actor self, WithExitOverlayInfo info)
+ 		{
+ 			this.self = self;
+@@ -56,7 +61,7 @@
+ 
+ 			var anim = new AnimationWithOffset(overlay,
+ 				() => body.LocalToWorld(info.Offset.Rotate(body.QuantizeOrientation(self, self.Orientation))),
+-				() => !buildComplete || !enable);
++				() => !buildComplete || !IsExitBlocked);
+ 
+ 			rs.Add(anim, info.Palette, info.IsPlayerPalette);
+ 		}
+@@ -80,13 +85,6 @@
+ 		public void UnitProduced(Actor self, Actor other, CPos exit)
+ 		{
+ 			this.exit = exit;
+-			enable = true;
+-		}
+-
+-		public void Tick(Actor self)
+-		{
+-			if (enable)
+-				enable = self.World.ActorMap.GetActorsAt(exit).Any(a => a != self);
+ 		}
+ 	}
+ }
+\ No newline at end of file

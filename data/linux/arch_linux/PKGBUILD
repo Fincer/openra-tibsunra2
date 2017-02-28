@@ -1,7 +1,7 @@
 # Maintainer: Fincer <fincer89 at hotmail dot com>
 
 pkgname=openra-bleed-tibsunra2
-pkgver=r22244.c12cfbc
+pkgver=r22988.cc3b46b58
 pkgrel=1
 pkgdesc="An open-source implementation of the Red Alert engine using .NET/mono and OpenGL (git version)"
 arch=("any")
@@ -14,15 +14,23 @@ provides=("openra")
 conflicts=("openra-git" "openra")
 install=openra-bleed-tibsunra2.install
 source=("$pkgname-src::git+https://github.com/OpenRA/OpenRA.git#branch=bleed"
+"git://github.com/OpenRA/d2.git"
 "git://github.com/OpenRA/ra2.git"
+hotfix-makefile-enable-ra-and-ts.patch
+hotfix-ra2-withexitoverlay-revert.patch
+linux-d2-ra2-make.patch
+linux-ra2-common.patch
+linux-d2-common.patch
+hotfix-makefile-readlink.patch)
 sha1sums=('SKIP'
           'SKIP'
           'SKIP'
-          '5d73aedf0b3f6736981c727646c122d3c75ea27b'
-          'af97ff3908959e60f44949ee874d9035999c9fc3'
-          '7e87cb67e8ade6397129e45203e67504d572abf6'
-          '07930220fbd876492085d82ec33001316b6862f9'
-          '9846854381f099e734d41dafe8eaa9457e27250b')
+          '2e6ff0bb5f4849449ba85f2fd0639b1a7e58c255'
+          '3f276aaf52a205e0f7d9110d76bde395ba68d154'
+          '16b3babd6182f0ac0223926cc9933e5952548850'
+          '7e163ad3e536d2c5a63376602a525c5269f0499e'
+          '1bffe99461ce964c7d3cfea86973728e3f597b57'
+          '87d687cb0b2e11050eb4b1b2ae31d46a6656c2f7')
 
 pkgver() {
     cd "$srcdir/$pkgname-src"
@@ -30,6 +38,17 @@ pkgver() {
 }
     
 build() {
+
+# Move Dune 2 Github files to the right place:
+    cd "$srcdir/d2"
+    mv ./OpenRA.Mods.D2 "$srcdir/$pkgname-src/"
+    mkdir -p "$srcdir/$pkgname-src/mods/d2/"
+    mv ./* "$srcdir/$pkgname-src/mods/d2/"
+
+# Get Dune 2 GIT version number for files
+    d2_version=git-$(git ls-remote https://github.com/OpenRA/d2.git | head -1 | sed "s/HEAD//" | sed 's/^\(.\{7\}\).*/\1/')
+    sed -i "s/Version: {DEV_VERSION}/Version: $d2_version/g" $srcdir/$pkgname-src/mods/d2/mod.yaml
+    sed -i "s/maps\/d2\/{DEV_VERSION}/maps\/d2\/$d2_version/g" $srcdir/$pkgname-src/mods/d2/mod.yaml
 
 # Move Red Alert 2 Github files to the right place:
     cd "$srcdir/ra2"
@@ -51,6 +70,8 @@ build() {
     cd "$srcdir/$pkgname-src"
     make version
     make dependencies
+    make core
+    make tools
     make all [DEBUG=false]
 }
 
@@ -58,12 +79,10 @@ package() {
     cd "$srcdir/$pkgname-src"
     make prefix=/usr DESTDIR="$pkgdir" install-all
     make prefix=/usr DESTDIR="$pkgdir" install-linux-shortcuts
+    make prefix=/usr DESTDIR="$pkgdir" install-linux-mime
+    make prefix=/usr DESTDIR="$pkgdir" install-linux-appdata
 
-    rm $pkgdir/usr/lib/openra/mods/cnc/OpenRA.Mods.Cnc.dll.mdb
-    rm $pkgdir/usr/lib/openra/mods/common/OpenRA.Mods.Common.dll.mdb
+    rm $pkgdir/usr/lib/openra/mods/common/{OpenRA.Mods.Common.dll.mdb,OpenRA.Mods.Cnc.dll.mdb}
     rm $pkgdir/usr/lib/openra/mods/d2k/OpenRA.Mods.D2k.dll.mdb
-    rm $pkgdir/usr/lib/openra/mods/ra/OpenRA.Mods.RA.dll.mdb
-
     rm $pkgdir/usr/lib/openra/mods/ra2/{build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
-    rm $pkgdir/usr/lib/openra/mods/ts/OpenRA.Mods.TS.dll.mdb
 }

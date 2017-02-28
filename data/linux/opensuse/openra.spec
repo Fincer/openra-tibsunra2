@@ -23,8 +23,8 @@ Summary:        Recreation of the early Command & Conquer games
 License:        GPL-3.0
 Group:          Amusements/Games/Strategy/Real Time
 Source:         %{name}-%{version}.tar.gz
-Source2:        thirdparty.tar.gz
-Source3:        http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz
+##Source2:        thirdparty.tar.gz
+##Source3:        http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildArch:      noarch
 BuildRequires:  desktop-file-utils
@@ -63,13 +63,13 @@ Red Alert as well as Dune 2000 if the original game files are
 provided.
 
 %prep
-%setup -q -n %{name}-%{version} -a2
+##%setup -q -n %{name}-%{version} -a2
+%setup -q -n %{name}-%{version}
 make version
 
 %build
-mkdir -p ./thirdparty/download
-
-cp %{SOURCE3} ./thirdparty/download
+##mkdir -p ./thirdparty/download
+##cp %{SOURCE3} ./thirdparty/download
 
 make dependencies
 make core
@@ -84,11 +84,9 @@ make DESTDIR="%{buildroot}" prefix=%{_prefix} install-linux-appdata
 make DESTDIR="%{buildroot}" prefix=%{_prefix} install-man-page
 
 rm -rf %{buildroot}/usr/lib/openra/mods/cnc/OpenRA.Mods.Cnc.dll.mdb
-rm -rf %{buildroot}/usr/lib/openra/mods/common/OpenRA.Mods.Common.dll.mdb
+rm -rf %{buildroot}/usr/lib/openra/mods/common/{OpenRA.Mods.Common.dll.mdb,OpenRA.Mods.Cnc.dll.mdb}
 rm -rf %{buildroot}/usr/lib/openra/mods/d2k/OpenRA.Mods.D2k.dll.mdb
-rm -rf %{buildroot}/usr/lib/openra/mods/ra/OpenRA.Mods.RA.dll.mdb
 rm -rf %{buildroot}/usr/lib/openra/mods/ra2/{.gitattributes,.gitignore,.travis.yml,build.cake,OpenRA.Mods.RA2.dll.mdb,make.cmd,make.ps1,makefile}
-rm -rf %{buildroot}/usr/lib/openra/mods/ts/OpenRA.Mods.TS.dll.mdb
 
 %if 0%{?suse_version}
 %fdupes %{buildroot}%{_prefix}/lib

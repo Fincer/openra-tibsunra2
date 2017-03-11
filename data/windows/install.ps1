@@ -411,14 +411,11 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Utility.pdb
-	Remove-Item .\data\windows\OpenRA-bleed\utility.cmd.orig
 	Remove-Item .\data\windows\OpenRA-bleed\AUTHORS
 
 	Remove-Item .\data\windows\OpenRA-bleed\mods\common\OpenRA.Mods.Cnc.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\mods\common\OpenRA.Mods.Common.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\mods\d2k\OpenRA.Mods.D2k.pdb
-
-	Remove-Item .\data\windows\OpenRA-bleed\mods\all\mod.yaml.orig
 
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\build.cake
 	Remove-Item .\data\windows\OpenRA-bleed\mods\ra2\makefile

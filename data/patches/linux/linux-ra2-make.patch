@@ -1,5 +1,5 @@
---- a/Makefile
-+++ b/Makefile
+--- Makefile	2017-03-11 11:36:14.104436756 +0200
++++ Makefile.patched.ra2d2	2017-03-11 11:41:29.217438271 +0200
 @@ -155,6 +155,15 @@
  PROGRAMS += mod_cnc
  mod_cnc: $(mod_cnc_TARGET)
@@ -44,13 +44,13 @@
 +mods: mod_common mod_cnc mod_d2k mod_ra2
  
  all: dependencies core tools
-
-@@ -364,6 +379,8 @@
- 	@$(INSTALL_DIR) "$(DATA_INSTALL_DIR)/mods"
- 	@$(CP_R) mods/common "$(DATA_INSTALL_DIR)/mods/"
- 	@$(INSTALL_PROGRAM) $(mod_common_TARGET) "$(DATA_INSTALL_DIR)/mods/common"
+ 
+@@ -368,6 +383,8 @@
+ 	@$(CP_R) mods/cnc "$(DATA_INSTALL_DIR)/mods/"
+ 	@$(CP_R) mods/ra "$(DATA_INSTALL_DIR)/mods/"
+ 	@$(CP_R) mods/d2k "$(DATA_INSTALL_DIR)/mods/"
 +	@$(CP_R) mods/ra2 "$(DATA_INSTALL_DIR)/mods/"
 +	@$(INSTALL_PROGRAM) $(mod_ra2_TARGET) "$(DATA_INSTALL_DIR)/mods/ra2"
- 	@$(CP_R) mods/cnc "$(DATA_INSTALL_DIR)/mods/"
- 	@$(INSTALL_PROGRAM) $(mod_cnc_TARGET) "$(DATA_INSTALL_DIR)/mods/cnc"
- 	@$(CP_R) mods/d2k "$(DATA_INSTALL_DIR)/mods/"
+ 	@$(INSTALL_PROGRAM) $(mod_d2k_TARGET) "$(DATA_INSTALL_DIR)/mods/d2k"
+ 	@$(CP_R) mods/modchooser "$(DATA_INSTALL_DIR)/mods/"
+ 

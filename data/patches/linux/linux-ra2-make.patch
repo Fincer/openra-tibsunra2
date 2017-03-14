@@ -1,4 +1,4 @@
---- a/Makefile	2017-03-11 11:36:14.104436756 +0200
+--- a/Makefile
 +++ b/Makefile
 @@ -155,6 +155,15 @@
  PROGRAMS += mod_cnc

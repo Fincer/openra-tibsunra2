@@ -1,5 +1,5 @@
---- Makefile	2017-03-11 11:36:14.104436756 +0200
-+++ Makefile.patched.ra2d2	2017-03-11 11:41:29.217438271 +0200
+--- a/Makefile	2017-03-11 11:36:14.104436756 +0200
++++ b/Makefile
 @@ -155,6 +155,15 @@
  PROGRAMS += mod_cnc
  mod_cnc: $(mod_cnc_TARGET)

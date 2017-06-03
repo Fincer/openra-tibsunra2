@@ -95,7 +95,7 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item .\data\windows\*.patch -Force -ErrorAction SilentlyContinue
 
 #------------------------------------------------------
-## Prepare Github environment for downloading the source
+## Prepare GitHub environment for downloading the source
 
 	[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
 
@@ -106,20 +106,20 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 #------------------------------------------------------
 ## Download OpenRA-bleed source code
 
-	"`nDownloading OpenRA source files from Github. Please Stand By."
+	"`nDownloading OpenRA source files from GitHub. Please stand by."
 	$client.DownloadFile("https://github.com/OpenRA/OpenRA/archive/bleed.zip?ref=bleed",".\data\windows\OpenRA-bleed.zip")
 
 #------------------------------------------------------
 ## Download Red Alert 2 mod files
 
-	"`nDownloading Red Alert 2 mod files from Github. Please Stand By."
+	"`nDownloading Red Alert 2 mod files from GitHub. Please stand by."
 	$client.DownloadFile("https://github.com/OpenRA/ra2/archive/master.zip?ref=master",".\data\windows\ra2-master.zip")
 
 #------------------------------------------------------
 ## Download Dune 2 mod files
 
 	if (-Not ($dune2_install -eq "n") -and -Not ($dune2_install -eq "o")) {
-		"`nDownloading Dune 2 mod files from Github. Please Stand By."
+		"`nDownloading Dune 2 mod files from GitHub. Please stand by."
 		$client.DownloadFile("https://github.com/OpenRA/d2/archive/master.zip?ref=master",".\data\windows\d2-master.zip")
 	}
 
@@ -278,6 +278,7 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 		#These files will conflict with windows-d2-ra2-make.patch & windows-d2-ra2-openra-solution.patch
 		Remove-Item .\data\windows\windows-ra2-make.patch -Force -ErrorAction SilentlyContinue
 		Remove-Item .\data\windows\windows-ra2-openra-solution.patch  -Force -ErrorAction SilentlyContinue
+		Remove-Item .\data\windows\windows-ra2-launchcommand.patch  -Force -ErrorAction SilentlyContinue
 
 	} else {
 
@@ -333,7 +334,7 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	(Get-Content .\data\windows\Openra-bleed\mods\ra2\mod.yaml) -replace '{DEV_VERSION}',$ra2_gitversion | Set-Content .\data\windows\Openra-bleed\mods\ra2\mod.yaml
 
 # Mod Chooser
-	(Get-Content .\data\windows\Openra-bleed\mods\modchooser\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\windows\Openra-bleed\mods\modchooser\mod.yaml
+#	(Get-Content .\data\windows\Openra-bleed\mods\modchooser\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\windows\Openra-bleed\mods\modchooser\mod.yaml
 
 # All
 	(Get-Content .\data\windows\Openra-bleed\mods\all\mod.yaml) -replace '{DEV_VERSION}',$openra_gitversion | Set-Content .\data\windows\Openra-bleed\mods\all\mod.yaml
@@ -376,7 +377,7 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Server
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Test
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Utility
-	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.GameMonitor
+#	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.GameMonitor
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\OpenRA.Game
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\packaging
 	Remove-Item -Recurse .\data\windows\OpenRA-bleed\thirdparty
@@ -409,7 +410,8 @@ If (Test-Path ".\data\hotfixes\windows\*.patch"){
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Platforms.Default.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.nunit
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Test.pdb
-	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.pdb
+	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.sln.orig
+	Remove-Item .\data\windows\OpenRA-bleed\utility.cmd.orig
 	Remove-Item .\data\windows\OpenRA-bleed\OpenRA.Utility.pdb
 	Remove-Item .\data\windows\OpenRA-bleed\AUTHORS
 

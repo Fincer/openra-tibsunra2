@@ -1,3 +1,7 @@
+**NOTE!** This script is currently incompatible with the current OpenRA & OpenRA/ra2 releases --- 14th April 2018
+
+------------------
+
 Welcoming you to Texas...
 
 Receiving thoughts...
